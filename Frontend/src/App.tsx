@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import * as MapService from './services/MapService';
+import Availability from './components/Availability/Availability';
 
 function App() {
     useEffect(() => {
@@ -9,7 +10,7 @@ function App() {
             })
             .catch((err) => console.log(err));
     }, []);
-    return <h1>App</h1>;
+    return <Availability />;
 }
 
 export default App;
