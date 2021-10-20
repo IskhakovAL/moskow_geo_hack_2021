@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
-from .extensions import generate_resp, generate_main_map
+from .extensions import generate_resp, generate_main_map, get_catalog
 
 node = Blueprint('node', __name__)
 
@@ -14,7 +14,11 @@ def api_version():
     return generate_resp('ok', 'Success', resp)
 
 
-@node.route('/api/map', methods=['GET'])
+@node.route('/api/map', methods=['POST'])
 def api_map():
+    return generate_main_map(request.form)._repr_html_()
 
-    return render_template('index.html', map=generate_main_map()._repr_html_())
+
+@node.route('/api/catalog', methods=['GET'])
+def api_catalog():
+    return get_catalog()
