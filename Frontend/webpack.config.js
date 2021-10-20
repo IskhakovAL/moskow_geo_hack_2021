@@ -79,7 +79,7 @@ const jsLoaders = (...presets) => {
     return loaders;
 };
 
-const PROXY_HOST = process.env.PROXY_HOST || 'http://84.252.141.1:8080';
+const PROXY_HOST = process.env.PROXY_HOST || 'http://84.252.139.241:8080';
 const origin = PROXY_HOST.replace(/http(s)?:\/\/?/, '');
 
 const proxyConfig = {

@@ -1,16 +1,5 @@
-import * as React from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import { useState } from 'react';
-
-const top100Films = [
-    { id: 'dskad', name: 'Теннис' },
-    { id: 'dsdsadadkad', name: 'Футбол' },
-    { id: 'daqqweskad', name: 'Волейбол' },
-    { id: 'eqwewq', name: 'Хоккей' },
-    { id: 'ewqewqeqw', name: 'Шахматы' },
-];
+import React, { useState } from 'react';
+import AutocompleteMulti from '../AutocompleteMulti/AutocompleteMulti';
 
 const options = [
     { name: 'The Shawshank Redemption', id: 1994 },
@@ -115,33 +104,17 @@ const options = [
     { name: 'Monty Python and the Holy Grail', id: 1975 },
 ];
 
-export default function SportServices() {
+const DepartmentalAffiliation = () => {
     const [value, setValue] = useState([]);
 
-    console.log(value);
-
     return (
-        <Stack spacing={3} sx={{ width: 500 }}>
-            <Autocomplete
-                multiple
-                style={{ margin: 24 }}
-                value={value}
-                onChange={(event, newValue) => {
-                    console.log(newValue);
-                    setValue(newValue);
-                }}
-                id="tags-standard"
-                options={options}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="standard"
-                        label="Виды спортивных услуг"
-                        placeholder=""
-                    />
-                )}
-            />
-        </Stack>
+        <AutocompleteMulti
+            value={value}
+            setValue={setValue}
+            options={options}
+            label="Ведомственная принадлежность"
+        />
     );
-}
+};
+
+export default DepartmentalAffiliation;
