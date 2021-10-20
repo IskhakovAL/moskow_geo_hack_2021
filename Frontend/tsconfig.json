@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "typeRoots": ["node_modules/@types", "./typings"],
+        "outDir": "./build/",
+        "sourceMap": true,
+        "incremental": true,
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "lib": ["es2015", "es7", "dom", "es2018.promise", "ESNext.String"],
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": true,
+        "noUnusedLocals": true,
+        "skipLibCheck": true
+    }
+}
