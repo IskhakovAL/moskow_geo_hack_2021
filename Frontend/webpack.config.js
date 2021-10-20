@@ -28,7 +28,7 @@ const optimization = () => {
 };
 
 const getPlugins = () => {
-    const plugins = [
+    return [
         new HtmlWebpackPlugin({
             template: './public/index.html',
             minify: {
@@ -45,30 +45,6 @@ const getPlugins = () => {
             hashDigestLength: 4,
         }),
     ];
-
-    if (isDevelopment) {
-        plugins.push(
-            new webpack.HotModuleReplacementPlugin(),
-            new ForkTsCheckerWebpackPlugin({
-                async: true,
-                typescript: {
-                    diagnosticOptions: {
-                        semantic: true,
-                        syntactic: true,
-                    },
-                    configOverwrite: {
-                        compilerOptions: {
-                            noUnusedLocals: false,
-                        },
-                    },
-                    // configFile: './tsconfig.json',
-                },
-                logger: { infrastructure: 'silent', issues: 'console', devServer: true },
-            })
-        );
-    }
-
-    return plugins;
 };
 
 const babelOptions = (...presets) => {
@@ -162,7 +138,6 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: 'global',
-                            localIdentName: '[hash:base64:5]',
                         },
                     },
                     'postcss-loader',
@@ -177,7 +152,6 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
-                            localIdentName: '[local]_[hash:base64:5]',
                         },
                     },
                     'postcss-loader',

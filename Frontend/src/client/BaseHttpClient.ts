@@ -70,7 +70,7 @@ function unpackFetchResponse(responseType: ResponseType) {
             try {
                 decodedJson = JSON.parse(text);
             } catch (err) {
-                return [{}, response];
+                return [text, response];
             }
             return [decodedJson, response];
         });

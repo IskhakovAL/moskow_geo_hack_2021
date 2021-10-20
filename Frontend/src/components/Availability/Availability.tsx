@@ -29,13 +29,13 @@ export default function Availability() {
         });
     };
 
-    const handleSubmit = () => {
-        const values = Object.keys(state).filter((key) => {
-            return state[key];
-        });
-
-        console.log(values);
-    };
+    // const handleSubmit = () => {
+    //     const values = Object.keys(state).filter((key) => {
+    //         return state[key];
+    //     });
+    //
+    //     console.log(values);
+    // };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -57,7 +57,6 @@ export default function Availability() {
                     ))}
                 </FormGroup>
             </FormControl>
-            <Button onClick={handleSubmit}>Отправить</Button>
         </Box>
     );
 }
