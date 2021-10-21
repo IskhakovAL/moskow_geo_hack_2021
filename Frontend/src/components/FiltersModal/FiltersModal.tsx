@@ -5,10 +5,21 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { createForm } from 'final-form';
 import Modal from '../Modal/Modal';
+import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
+import { IDict } from '../../services/MapService';
 
 interface IProps {
     onClose: () => void;
+    dict: IDict;
+    fetchMap: (params?: {
+        sportsFacility: any[];
+        sportsZonesList: any[];
+        departmentalAffiliation: any[];
+        sportsServices: any[];
+        availability: any[];
+        sportsZonesTypes: any[];
+    }) => Promise<void>;
 }
 
 const filters = [
@@ -20,7 +31,7 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose }: IProps) => {
+const FiltersModal = ({ onClose, dict, fetchMap }: IProps) => {
     const [acitveFilter, setActiveFilter] = useState('');
     const initialValues = {
         sportsFacility: [],
@@ -41,8 +52,23 @@ const FiltersModal = ({ onClose }: IProps) => {
         setActiveFilter('');
     }, []);
 
-    const onSubmit = (values) => {
-        console.log(values);
+    const onSubmit = async (values) => {
+        const params = {
+            sportsFacility: values.sportsFacility.map((item) => item.id),
+            departmentalAffiliation: values.departmentalAffiliation.map((item) => item.id),
+            sportsZonesList: values.sportsZonesList.map((item) => item.id),
+            sportsZonesTypes: values.sportsZonesTypes.map((item) => item.id),
+            sportsServices: values.sportsServices.map((item) => item.id),
+            availability: Object.keys(values.availability).reduce((acc, key) => {
+                if (values.availability[key]) {
+                    acc.push(key);
+                }
+
+                return acc;
+            }, []),
+        };
+
+        fetchMap(params);
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);
@@ -87,9 +113,11 @@ const FiltersModal = ({ onClose }: IProps) => {
                                     >
                                         Назад к фильтрам
                                     </Button>
-                                    <React.Suspense fallback={<span>Загрузка...</span>}>
-                                        <LazyFilter />
-                                    </React.Suspense>
+                                    <DictContext.Provider value={dict}>
+                                        <React.Suspense fallback={<span>Загрузка...</span>}>
+                                            <LazyFilter />
+                                        </React.Suspense>
+                                    </DictContext.Provider>
                                 </>
                             )}
                         </form>

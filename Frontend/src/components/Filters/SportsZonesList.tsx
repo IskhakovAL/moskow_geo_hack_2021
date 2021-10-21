@@ -1,19 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import AutocompleteVirtualization from '../AutocompleteVirtualization/AutocompleteVirtualization';
-
-const options = [
-    { id: 'step', name: 'С шаговой доступностью' },
-    { id: 'regional', name: 'С районной доступностью' },
-    { id: 'district', name: 'С окружной доступностью' },
-    { id: 'city', name: 'Городского значения' },
-];
+import { DictContext } from '../../context/context';
 
 const SportsZonesList = () => {
+    const { sportsZonesList = [] } = useContext(DictContext);
+
     return (
         <AutocompleteVirtualization
             name="sportsZonesList"
             label="Перечень спортивных зон"
-            options={options}
+            options={sportsZonesList}
         />
     );
 };

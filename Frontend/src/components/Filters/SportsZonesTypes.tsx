@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import AutocompleteMulti from '../AutocompleteMulti/AutocompleteMulti';
+import { DictContext } from '../../context/context';
 
-const options = [
-    { id: 'step', name: 'С шаговой доступностью' },
-    { id: 'regional', name: 'С районной доступностью' },
-    { id: 'district', name: 'С окружной доступностью' },
-    { id: 'city', name: 'Городского значения' },
-];
+const SportsZonesTypes = () => {
+    const { sportsZonesTypes = [] } = useContext(DictContext);
 
-const SportsZonesList = () => {
     return (
-        <AutocompleteMulti name="sportsZonesList" label="Типы спортивных зон " options={options} />
+        <AutocompleteMulti
+            name="sportsZonesTypes"
+            label="Типы спортивных зон"
+            options={sportsZonesTypes}
+        />
     );
 };
 
-export default SportsZonesList;
+export default SportsZonesTypes;
