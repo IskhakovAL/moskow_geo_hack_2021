@@ -1,0 +1,14 @@
+.filters {
+  display: flex;
+}
+
+.filterButton {
+  min-width: 356px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.backButton {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
