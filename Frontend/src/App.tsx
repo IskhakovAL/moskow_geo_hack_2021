@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Skeleton, Stack } from '@mui/material';
 import Availability from './components/Filters/Availability';
 import * as MapService from './services/MapService';
-import SportServices from './components/Filters/SportServices';
 import styles from './App.m.scss';
 import SportsFacility from './components/Filters/SportsFacility';
 import DepartmentalAffiliation from './components/Filters/DepartmentalAffiliation';
-import { fetchArray } from './services/MapService';
 import SportsZonesList from './components/Filters/SportsZonesList';
 import SportsZonesTypes from './components/Filters/SportsZonesTypes';
 import SportsServices from './components/Filters/SportServices';
@@ -26,13 +24,6 @@ function App() {
             } catch {
                 setIsFetching(false);
             }
-        })();
-        (async () => {
-            try {
-                const response = await MapService.fetchArray();
-
-                console.log(response);
-            } catch {}
         })();
     }, []);
 
