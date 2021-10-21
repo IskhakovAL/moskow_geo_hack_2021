@@ -1,14 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
 import AutocompleteMulti from '../AutocompleteMulti/AutocompleteMulti';
-
-const top100Films = [
-    { id: 'dskad', name: 'Теннис' },
-    { id: 'dsdsadadkad', name: 'Футбол' },
-    { id: 'daqqweskad', name: 'Волейбол' },
-    { id: 'eqwewq', name: 'Хоккей' },
-    { id: 'ewqewqeqw', name: 'Шахматы' },
-];
 
 const options = [
     { name: 'The Shawshank Redemption', id: 1994 },
@@ -114,14 +105,7 @@ const options = [
 ];
 
 export default function SportsServices() {
-    const [value, setValue] = useState([]);
-
     return (
-        <AutocompleteMulti
-            options={options}
-            value={value}
-            setValue={setValue}
-            label="Виды спортивных услуг"
-        />
+        <AutocompleteMulti name="sportsServices" options={options} label="Виды спортивных услуг" />
     );
 }

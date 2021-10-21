@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AutocompleteMulti from '../AutocompleteMulti/AutocompleteMulti';
 
 const options = [
@@ -105,12 +105,9 @@ const options = [
 ];
 
 const DepartmentalAffiliation = () => {
-    const [value, setValue] = useState([]);
-
     return (
         <AutocompleteMulti
-            value={value}
-            setValue={setValue}
+            name="departmentalAffiliation"
             options={options}
             label="Ведомственная принадлежность"
         />

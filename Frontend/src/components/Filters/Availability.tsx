@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { Field } from 'react-final-form';
 
 const options = [
     { id: 'step', name: 'С шаговой доступностью' },
@@ -13,29 +14,7 @@ const options = [
     { id: 'city', name: 'Городского значения' },
 ];
 
-const initialState = options.reduce((acc, item) => {
-    acc[item.id] = false;
-    return acc;
-}, {});
-
 export default function Availability() {
-    const [state, setState] = useState(initialState);
-
-    const handleChange = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.checked,
-        });
-    };
-
-    // const handleSubmit = () => {
-    //     const values = Object.keys(state).filter((key) => {
-    //         return state[key];
-    //     });
-    //
-    //     console.log(values);
-    // };
-
     return (
         <Box sx={{ display: 'flex' }}>
             <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
@@ -45,11 +24,18 @@ export default function Availability() {
                         <FormControlLabel
                             key={opt.id}
                             control={
-                                <Checkbox
-                                    checked={state[opt.id]}
-                                    onChange={handleChange}
-                                    name={opt.id}
-                                />
+                                <Field name={opt.id} type="checkbox">
+                                    {(props) => (
+                                        <>
+                                            <Checkbox
+                                                name={props.input.name}
+                                                onChange={props.input.onChange}
+                                                checked={props.input.checked}
+                                                value={props.input.value}
+                                            />
+                                        </>
+                                    )}
+                                </Field>
                             }
                             label={opt.name}
                         />

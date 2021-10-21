@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AutocompleteVirtualization from '../AutocompleteVirtualization/AutocompleteVirtualization';
 
 const options = [
@@ -9,14 +9,11 @@ const options = [
 ];
 
 const SportsZonesList = () => {
-    const [value, setValue] = useState([]);
-
     return (
         <AutocompleteVirtualization
+            name="sportsZonesList"
             label="Перечень спортивных зон"
             options={options}
-            value={value}
-            setValue={setValue}
         />
     );
 };

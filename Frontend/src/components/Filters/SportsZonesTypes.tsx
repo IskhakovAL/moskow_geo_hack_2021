@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AutocompleteMulti from '../AutocompleteMulti/AutocompleteMulti';
 
 const options = [
@@ -9,15 +9,8 @@ const options = [
 ];
 
 const SportsZonesList = () => {
-    const [value, setValue] = useState([]);
-
     return (
-        <AutocompleteMulti
-            label="Типы спортивных зон "
-            options={options}
-            value={value}
-            setValue={setValue}
-        />
+        <AutocompleteMulti name="sportsZonesList" label="Типы спортивных зон " options={options} />
     );
 };
 

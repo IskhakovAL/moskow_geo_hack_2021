@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AutocompleteVirtualization from '../AutocompleteVirtualization/AutocompleteVirtualization';
 
 const options = [
@@ -105,9 +105,13 @@ const options = [
 ];
 
 const SportsFacility = () => {
-    const [value, setValue] = useState([]);
-
-    return <AutocompleteVirtualization label="Наименование спортивного объекта" options={options} value={value} setValue={setValue} />;
+    return (
+        <AutocompleteVirtualization
+            name="sportsFacility"
+            label="Наименование спортивного объекта"
+            options={options}
+        />
+    );
 };
 
 export default SportsFacility;

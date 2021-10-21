@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import { Autocomplete } from 'mui-rff';
+import { autocompleteClasses } from '@mui/material/Autocomplete';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ListSubheader from '@mui/material/ListSubheader';
 import Popper from '@mui/material/Popper';
@@ -124,26 +125,20 @@ const StyledPopper = styled(Popper)({
     },
 });
 
-export default function AutocompleteVirtualization({ value, setValue, options, label }) {
+export default function AutocompleteVirtualization({ options, label, name }) {
     return (
         <Autocomplete
             multiple
+            name={name}
             id="virtualize-demo"
             style={{ margin: 24 }}
             sx={{ width: 300 }}
-            value={value}
-            onChange={(event, newValue) => {
-                console.log(newValue);
-                setValue(newValue);
-            }}
             disableListWrap
             PopperComponent={StyledPopper}
             ListboxComponent={ListboxComponent}
             options={options}
             getOptionLabel={(option) => option.name}
-            renderInput={(params) => (
-                <TextField {...params} label={label} />
-            )}
+            renderInput={(params) => <TextField {...params} label={label} variant="standard" />}
             renderOption={(props, option) => [props, option]}
             renderGroup={(params) => params}
         />

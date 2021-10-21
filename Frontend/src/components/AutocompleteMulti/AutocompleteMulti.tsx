@@ -1,29 +1,20 @@
 import React from 'react';
 import Stack from '@mui/material/Stack';
-import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import { Autocomplete } from 'mui-rff';
 
-export default function AutocompleteMulti({ options, value, setValue, label }) {
+export default function AutocompleteMulti({ options, label, name }) {
     return (
-        <Stack spacing={3} sx={{ width: 500 }}>
+        <Stack spacing={3}>
             <Autocomplete
                 multiple
+                name={name}
                 style={{ margin: 24 }}
-                value={value}
-                onChange={(event, newValue) => {
-                    console.log(newValue);
-                    setValue(newValue);
-                }}
                 id="tags-standard"
                 options={options}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="standard"
-                        label={label}
-                        placeholder=""
-                    />
+                    <TextField {...params} variant="standard" label={label} placeholder="" />
                 )}
             />
         </Stack>
