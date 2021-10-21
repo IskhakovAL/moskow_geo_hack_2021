@@ -1,11 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Button } from '@mui/material';
 
 const options = [
     { id: 'step', name: 'С шаговой доступностью' },
@@ -20,7 +19,7 @@ const initialState = options.reduce((acc, item) => {
 }, {});
 
 export default function Availability() {
-    const [state, setState] = React.useState(initialState);
+    const [state, setState] = useState(initialState);
 
     const handleChange = (event) => {
         setState({
