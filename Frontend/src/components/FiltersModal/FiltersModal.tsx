@@ -12,7 +12,7 @@ import { IDict } from '../../services/MapService';
 interface IProps {
     onClose: () => void;
     dict: IDict;
-    fetchMap: (params?: {
+    fetchMarkers: (params?: {
         sportsFacility: any[];
         sportsZonesList: any[];
         departmentalAffiliation: any[];
@@ -31,7 +31,7 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose, dict, fetchMap }: IProps) => {
+const FiltersModal = ({ onClose, dict, fetchMarkers }: IProps) => {
     const [acitveFilter, setActiveFilter] = useState('');
     const initialValues = {
         sportsFacility: [],
@@ -68,7 +68,7 @@ const FiltersModal = ({ onClose, dict, fetchMap }: IProps) => {
             }, []),
         };
 
-        fetchMap(params);
+        fetchMarkers(params);
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);
@@ -82,6 +82,7 @@ const FiltersModal = ({ onClose, dict, fetchMap }: IProps) => {
                     Object.keys(valuesRef.current).length ? valuesRef.current : initialValues
                 }
                 render={({ values, handleSubmit }) => {
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
                     useEffect(() => {
                         valuesRef.current = values;
                     }, [values]);
