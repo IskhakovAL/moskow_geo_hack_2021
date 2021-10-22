@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
@@ -31,26 +31,22 @@ const getPlugins = () => {
     return [
         new HtmlWebpackPlugin({
             template: './public/index.html',
-            minify: {
-                collapseWhitespace: isProduction,
-            },
+            favicon: './public/favicon.ico',
         }),
-        new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
             filename: filename('css'),
         }),
-        new webpack.HashedModuleIdsPlugin({
-            hashFunction: 'md4',
-            hashDigest: 'base64',
-            hashDigestLength: 4,
-        }),
+        new CleanWebpackPlugin(),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
     ];
 };
-
 const babelOptions = (...presets) => {
     const opts = {
         presets: ['@babel/preset-env'],
-        plugins: ['@babel/plugin-proposal-class-properties'],
+        plugins: [
+            '@babel/plugin-proposal-class-properties',
+            '@babel/plugin-proposal-optional-chaining',
+        ],
     };
 
     if (presets) {
@@ -79,7 +75,7 @@ const jsLoaders = (...presets) => {
     return loaders;
 };
 
-const PROXY_HOST = process.env.PROXY_HOST || 'http://84.252.139.241:8080';
+const PROXY_HOST = process.env.PROXY_HOST || 'http://62.84.123.182';
 const origin = PROXY_HOST.replace(/http(s)?:\/\/?/, '');
 
 const proxyConfig = {

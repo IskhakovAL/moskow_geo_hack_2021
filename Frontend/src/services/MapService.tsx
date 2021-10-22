@@ -15,6 +15,12 @@ export interface IDict {
     availability: DictItem[];
 }
 
-export const fetchMap = (params) =>
-    Client.doRequest('map', { method: RequestMethod.POST, data: params });
+export type MarkerType = { position: [number, number], popup: string};
+
+export interface IMarkers {
+    markers: MarkerType[];
+}
+
+export const fetchMarkers = (params) =>
+    Client.doRequest<IMarkers>('locations', { method: RequestMethod.POST, data: params });
 export const fetchDict = () => Client.doRequest<IDict>('catalog');

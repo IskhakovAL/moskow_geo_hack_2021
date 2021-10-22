@@ -5,6 +5,7 @@ import * as MapService from './services/MapService';
 import styles from './app.m.scss';
 import FiltersModal from './components/FiltersModal/FiltersModal';
 import { IDict } from './services/MapService';
+import Map from './Map/Map';
 
 const initialParams = {
     sportsFacility: [],
@@ -16,17 +17,17 @@ const initialParams = {
 };
 
 function App() {
-    const [srcDoc, setSrcDoc] = useState(null);
+    const [markers, setMarkers] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
-    const [isOpenFilters, setIsOpenFilters] = useState(true);
+    const [isOpenFilters, setIsOpenFilters] = useState(false);
     const [dict, setDict] = useState({} as IDict);
 
-    const fetchMap = async (params = initialParams) => {
+    const fetchMarkers = async (params = initialParams) => {
         setIsFetching(true);
         try {
-            const response = await MapService.fetchMap(params);
+            const response = await MapService.fetchMarkers(params);
 
-            setSrcDoc(response);
+            setMarkers(response.markers);
             setIsFetching(false);
         } catch {
             setIsFetching(false);
@@ -41,7 +42,7 @@ function App() {
     };
 
     useEffect(() => {
-        fetchMap();
+        fetchMarkers();
         fetchDict();
     }, []);
 
@@ -53,8 +54,6 @@ function App() {
         setIsOpenFilters(false);
     }, []);
 
-    console.log('isFetching', isFetching);
-
     return (
         <>
             <div className={styles.arrow}>
@@ -65,12 +64,10 @@ function App() {
                     <CircularProgress />
                 </div>
             ) : (
-                <iframe srcDoc={srcDoc} width="100%" style={{ height: '95vh' }}>
-                    Ваш браузер не поддерживает плавающие фреймы!
-                </iframe>
+                <Map markers={markers} />
             )}
             {isOpenFilters && (
-                <FiltersModal onClose={handleClose} dict={dict} fetchMap={fetchMap} />
+                <FiltersModal onClose={handleClose} dict={dict} fetchMarkers={fetchMarkers} />
             )}
         </>
     );

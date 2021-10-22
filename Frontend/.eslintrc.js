@@ -47,6 +47,7 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/interface-name-prefix": 0,
         "no-restricted-imports": [
             1,
             "lodash",
