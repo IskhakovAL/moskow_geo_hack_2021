@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 
-from .extensions import generate_resp, generate_main_map, get_catalog
+from .extensions import generate_resp, generate_main_map, get_catalog, generate_locations
 
 node = Blueprint('node', __name__)
 
@@ -22,3 +22,8 @@ def api_map():
 @node.route('/api/catalog', methods=['GET'])
 def api_catalog():
     return get_catalog()
+
+
+@node.route('/api/locations', methods=['POST'])
+def api_locations():
+    return generate_locations(request.form)

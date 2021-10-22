@@ -1,0 +1,9 @@
+FROM node:14
+
+WORKDIR /usr/src/msk_app/Frontend
+
+COPY ./Frontend /usr/src/msk_app/Frontend
+
+RUN npm install
+
+CMD ["npm", "run", "start"]

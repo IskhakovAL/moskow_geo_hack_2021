@@ -84,7 +84,7 @@ def preprocessing():
     merged_objects['sport_type'] = merged_objects['sport_type'].fillna('Неизвестно')
     merged_objects['sport_type_id'] = ord_enc.fit_transform(merged_objects[['sport_type']]).astype(int)
 
-    # merged_objects = merged_objects[:1000]
+    merged_objects = merged_objects[:6000]
 
     with app_context:
         if 'merged_objects' not in g:
@@ -139,19 +139,33 @@ def filtering_merged_objects(form):
         filtered_merged_objects = filtered_merged_objects[~filtered_merged_objects['latitude'].isnull()]
         locations = list(zip(filtered_merged_objects['latitude'], filtered_merged_objects['longitude']))
         popups = ["Наименование: {}".format(name) for name in filtered_merged_objects['object_name']]
+        # print(type(locations), type(popups))
+        # print(locations)
+        # print(popups)
         return locations, popups
 
 
 def generate_main_map(form):
     with app_context:
         if 'map_obj' not in g:
-            map_obj = Map(location=[55.7522, 37.6156], zoom_start=12, tiles='cartodbpositron')
-            locations, popups = filtering_merged_objects(form)
-            if not locations:
-                return map_obj
-            plugins.MarkerCluster(locations=locations, popups=popups).add_to(map_obj)
-            g.map_obj = map_obj
-        return g.map_obj
+            g.map_obj = Map(location=[55.7522, 37.6156], zoom_start=12, tiles='cartodbpositron')
+        locations, popups = filtering_merged_objects(form)
+        if not locations:
+            return g.map_obj
+        map_obj = g.map_obj
+        plugins.MarkerCluster(locations=locations, popups=popups).add_to(map_obj)
+        return map_obj
+
+
+def generate_locations(form):
+    locations, popups = filtering_merged_objects(form)
+    resp = []
+    for i in range(len(locations)):
+        resp.append({
+            'position': list(locations[i]),
+            'popup': popups[i]
+        })
+    return {'markers': resp}
 
 
 def get_catalog():
