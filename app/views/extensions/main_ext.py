@@ -1,12 +1,11 @@
-import random
-
 import pandas as pd
 from os import getcwd, path
-from folium import Map, plugins
+import numpy as np
 from flask import g
 from sklearn.preprocessing import OrdinalEncoder
 
-from time import time
+import geopandas as gpd
+from shapely import wkt
 
 from .create_app import create_app
 from .local_config import Config
@@ -53,7 +52,39 @@ def preprocessing():
                            'availability_id', 'availability_name',
                            'sport_type', 'latitude', 'longitude', 'zones_square']
 
-    merged_objects = all_object[['object_id', 'object_name', 'organization_name', 'availability_name', 'latitude', 'longitude']] \
+    area = [0] * all_object.shape[0]
+    for i, row in object_type.iterrows():
+        ind = all_object.loc[all_object['object_id'] == row['object_id']].index[0]
+        if area[ind] is None:
+            continue
+        elif row['zones_square'] is None:
+            area[ind] = None
+        else:
+            area[ind] += row['zones_square']
+    all_object['area'] = area
+    all_object['area'] = all_object['area'].fillna(0)
+
+    radius = []
+    for i, row in all_object.iterrows():
+        if row['availability_name'] == "Шаговая доступность":
+            radius.append(500)
+        elif row['availability_name'] == "Районное":
+            radius.append(1000)
+        elif row['availability_name'] == "Окружное":
+            radius.append(3000)
+        elif row['availability_name'] == "Городское":
+            radius.append(5000)
+        # если доступность неизвестна, выбираем наименьший радиус
+        else:
+            radius.append(500)
+    all_object['radius'] = radius
+
+    max_area = max(all_object['area'])
+    all_object['circle_opacity'] = all_object['area'].apply(lambda x: min(0.9, (x + 100000) / max_area))
+
+    all_object = all_object.sort_values('area')
+
+    merged_objects = all_object[['object_id', 'object_name', 'organization_name', 'availability_name', 'latitude', 'longitude', 'area', 'radius', 'circle_opacity']] \
         .merge(object_type[['object_id', 'zones_name', 'zones_type', 'sport_type']], on=['object_id'], how='left')
 
     availability_name_dict = {
@@ -84,8 +115,6 @@ def preprocessing():
     merged_objects['sport_type'] = merged_objects['sport_type'].fillna('Неизвестно')
     merged_objects['sport_type_id'] = ord_enc.fit_transform(merged_objects[['sport_type']]).astype(int)
 
-    merged_objects = merged_objects[:6000]
-
     with app_context:
         if 'merged_objects' not in g:
             g.merged_objects = merged_objects
@@ -112,6 +141,65 @@ def generate_catalog():
         g.catalog = catalog
 
 
+def generate_polygons():
+    moscow_population_path = path.join(getcwd(), 'datasets', 'moscow_population.csv')
+    moscow_population = pd.read_csv(moscow_population_path, sep=';', encoding='cp1251')
+
+    moscow_polygon_path = path.join(getcwd(), 'datasets', 'moscow_polygon.csv')
+    moscow_polygon = pd.read_csv(moscow_polygon_path, sep=',', encoding='cp1251')
+
+    moscow_polygon = moscow_polygon.merge(moscow_population,
+                                          left_on='NAME',
+                                          right_on='municipality')
+
+    geometry = moscow_polygon['geometry'].map(wkt.loads)
+    moscow_polygon = gpd.GeoDataFrame(moscow_polygon, crs="EPSG:4326", geometry=geometry)
+
+    resp = {
+        'polygonList': [],
+        'multiPolygonList': []
+    }
+
+    for index, row in moscow_polygon.iterrows():
+        geometry = row['geometry']
+        opacity = row['opacity']
+
+        if geometry.geom_type == 'Polygon':
+            polygon_coords = list(geometry.exterior.coords)
+            polygon_coords = [[x[1], x[0]] for x in polygon_coords]
+
+            resp['polygonList'].append({
+                'polygon': polygon_coords,
+                'opacity': opacity
+            })
+
+        if geometry.geom_type == 'MultiPolygon':
+            polygon_coords = []
+            for b in geometry.boundary:
+                coords = np.dstack(b.coords.xy).tolist()
+                polygon_coords.append(*coords)
+
+            for polygon in polygon_coords:
+                for point in polygon:
+                    point[0], point[1] = point[1], point[0]
+
+            resp['multiPolygonList'].append({
+                'multiPolygon': polygon_coords,
+                'opacity': opacity
+            })
+
+    with app_context:
+        if 'moscow_polygon' not in g:
+            g.moscow_polygon = resp
+
+
+def get_polygons():
+    with app_context:
+        if 'moscow_polygon' not in g:
+            return {}
+        return g.moscow_polygon
+
+
 def filtering_merged_objects(form):
     with app_context:
         if 'merged_objects' not in g:
@@ -131,34 +219,26 @@ def filtering_merged_objects(form):
 
         if form:
             for name in name_to_id.keys():
-                if form.getlist(name):
-                    filters_ids = [int(val) for val in form.getlist(name)]
+                if form.get(name):
+                    filters_ids = [int(val) for val in form.get(name)]
                     filtered_merged_objects = filtered_merged_objects[filtered_merged_objects[name_to_id.get(name)].isin(filters_ids)]
 
-        filtered_merged_objects = filtered_merged_objects[filtered_merged_objects.columns[:6]].drop_duplicates()
+        print(filtered_merged_objects.columns)
+        filtered_merged_objects = filtered_merged_objects[filtered_merged_objects.columns[:9]].drop_duplicates()
         filtered_merged_objects = filtered_merged_objects[~filtered_merged_objects['latitude'].isnull()]
         locations = list(zip(filtered_merged_objects['latitude'], filtered_merged_objects['longitude']))
-        popups = ["Наименование: {}".format(name) for name in filtered_merged_objects['object_name']]
-        # print(type(locations), type(popups))
-        # print(locations)
-        # print(popups)
-        return locations, popups
-
-
-def generate_main_map(form):
-    with app_context:
-        if 'map_obj' not in g:
-            g.map_obj = Map(location=[55.7522, 37.6156], zoom_start=12, tiles='cartodbpositron')
-        locations, popups = filtering_merged_objects(form)
-        if not locations:
-            return g.map_obj
-        map_obj = g.map_obj
-        plugins.MarkerCluster(locations=locations, popups=popups).add_to(map_obj)
-        return map_obj
+        popup_pattern = 'Наименование: {}<br>Ведомственная принадлежность: {}<br>Доступность: {}'
+        popups = [
+            popup_pattern.format(row['object_name'], row['organization_name'], row['availability_name'])
+            for i, row in filtered_merged_objects.iterrows()]
+        areas = [ar for ar in filtered_merged_objects['area']]
+        radius = [rad for rad in filtered_merged_objects['radius']]
+        circle_opacity = [ci_op for ci_op in filtered_merged_objects['circle_opacity']]
+        return locations, popups, areas, radius, circle_opacity
 
 
 def generate_locations(form):
-    locations, popups = filtering_merged_objects(form)
+    locations, popups, _, _, _ = filtering_merged_objects(form)
     resp = []
     for i in range(len(locations)):
         resp.append({
@@ -166,6 +246,19 @@ def generate_locations(form):
             'popup': popups[i]
         })
     return {'markers': resp}
+
+
+def generate_circles(form):
+    locations, _, areas, radius, circle_opacity = filtering_merged_objects(form)
+    resp = []
+    for i in range(len(locations)):
+        resp.append({
+            'position': list(locations[i]),
+            'area': areas[i],
+            'radius': radius[i],
+            'circle_opacity': circle_opacity[i]
+        })
+    return {'circles': resp}
 
 
 def get_catalog():
