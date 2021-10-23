@@ -8,11 +8,11 @@ import Modal from '../Modal/Modal';
 import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
 import { IDict } from '../../services/MapService';
+import * as MapService from '../../services/MapService';
 
 interface IProps {
     onClose: () => void;
-    dict: IDict;
-    fetchMarkers: (params?: {
+    fetchMap: (params?: {
         sportsFacility: any[];
         sportsZonesList: any[];
         departmentalAffiliation: any[];
@@ -31,8 +31,10 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose, dict, fetchMarkers }: IProps) => {
+const FiltersModal = ({ onClose, fetchMap }: IProps) => {
     const [acitveFilter, setActiveFilter] = useState('');
+    const [dict, setDict] = useState({} as IDict);
+
     const initialValues = {
         sportsFacility: [],
         departmentalAffiliation: [],
@@ -41,6 +43,17 @@ const FiltersModal = ({ onClose, dict, fetchMarkers }: IProps) => {
         sportsServices: [],
         availability: [],
     };
+    const fetchDict = async () => {
+        try {
+            const response = await MapService.fetchDict();
+
+            setDict(response);
+        } catch {}
+    };
+
+    useEffect(() => {
+        fetchDict();
+    }, []);
     const valuesRef = useRef(initialValues);
 
     const handleOpen = (filter) => {
@@ -68,7 +81,7 @@ const FiltersModal = ({ onClose, dict, fetchMarkers }: IProps) => {
             }, []),
         };
 
-        fetchMarkers(params);
+        fetchMap(params);
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);

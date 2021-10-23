@@ -34,7 +34,8 @@ const getPlugins = () => {
             favicon: './public/favicon.ico',
         }),
         new MiniCssExtractPlugin({
-            filename: filename('css'),
+            filename: '[name][hash].css',
+            chunkFilename: '[id][hash].css',
         }),
         new CleanWebpackPlugin(),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
@@ -134,6 +135,7 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: 'global',
+                            localIdentName: '[hash:base64:5]',
                         },
                     },
                     'postcss-loader',
@@ -148,6 +150,7 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
+                            localIdentName: '[local]_[hash:base64:5]',
                         },
                     },
                     'postcss-loader',
