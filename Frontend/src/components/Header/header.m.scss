@@ -1,0 +1,16 @@
+.header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #fff;
+    height: 48px;
+    width: 100%;
+    position: fixed;
+    z-index: 500;
+}
+
+.link {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
