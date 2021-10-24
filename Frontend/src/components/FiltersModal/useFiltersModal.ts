@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 export default function useFiltersModal() {
-    const [isOpenFilters, setIsOpenFilters] = useState(false);
+    const [isOpenFilters, setIsOpenFilters] = useState(true);
 
     const handleOpen = useCallback(() => {
         setIsOpenFilters(true);

@@ -39,8 +39,8 @@ const CircleList = ({ circles, fetchPositions }: IProps) => {
                               key={idx}
                               pathOptions={{
                                   weight: 0,
-                                  fillOpacity: hasArea ? circle.circle_opacity : 0.2,
-                                  fillColor: hasArea ? 'blue' : 'silver',
+                                  fillOpacity: hasArea ? circle.circle_opacity : 0.07,
+                                  fillColor: hasArea ? '#EC0E43' : '#110932',
                               }}
                           />
                       );
