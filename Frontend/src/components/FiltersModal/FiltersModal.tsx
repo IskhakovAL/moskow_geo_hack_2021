@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Button } from '@mui/material';
+import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { createForm } from 'final-form';
@@ -56,6 +56,8 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
     }, []);
     const valuesRef = useRef(initialValues);
 
+    const handleSwitch = () => {};
+
     const handleOpen = (filter) => {
         setActiveFilter(filter);
     };
@@ -103,19 +105,27 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
                         <form onSubmit={handleSubmit}>
                             {!acitveFilter && (
                                 <>
-                                    {filters.map((filter) => (
-                                        <>
-                                            <Button
-                                                key={filter.component}
-                                                className={styles.filterButton}
-                                                onClick={() => handleOpen(filter.component)}
-                                                endIcon={<KeyboardArrowRightIcon />}
-                                            >
-                                                {filter.name}
-                                            </Button>
-                                            <br />
-                                        </>
-                                    ))}
+                                    <div className={styles.border}>
+                                        {filters.map((filter) => (
+                                            <>
+                                                <Button
+                                                    key={filter.component}
+                                                    className={styles.filterButton}
+                                                    onClick={() => handleOpen(filter.component)}
+                                                    endIcon={<KeyboardArrowRightIcon />}
+                                                >
+                                                    {filter.name}
+                                                </Button>
+                                                <br />
+                                            </>
+                                        ))}
+                                    </div>
+                                    <Typography>Слои</Typography>
+                                    <FormControlLabel
+                                        style={{ marginTop: '10px' }}
+                                        control={<Switch defaultChecked onChange={handleSwitch} />}
+                                        label="Круги"
+                                    />
                                 </>
                             )}
                             {acitveFilter && (

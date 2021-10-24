@@ -6,6 +6,7 @@ import MarkerMap from '../MarkerMap/MarkerMap';
 import FiltersModal from '../FiltersModal/FiltersModal';
 import * as MapService from '../../services/MapService';
 import useFiltersModal from '../FiltersModal/useFiltersModal';
+import { TCircle } from '../../services/MapService';
 
 const initialParams = {
     sportsFacility: [],
@@ -17,16 +18,19 @@ const initialParams = {
 };
 
 const MarkerPage = () => {
+    const [circles, setCircles] = useState([] as TCircle[]);
     const [markers, setMarkers] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
-    const { isOpenFilters, onOpen, onClose } = useFiltersModal();
+    const { isOpenFilters, onClose, onOpen } = useFiltersModal();
 
-    const fetchMarkers = async (params = initialParams) => {
+    const fetchPositions = async (params = initialParams) => {
         setIsFetching(true);
         try {
-            const response = await MapService.fetchMarkers(params);
+            const responseMarkers = await MapService.fetchMarkers(params);
+            const responseCircles = await MapService.fetchCircles(params);
 
-            setMarkers(response.markers);
+            setMarkers(responseMarkers.markers);
+            setCircles(responseCircles.circles);
             setIsFetching(false);
         } catch {
             setIsFetching(false);
@@ -34,7 +38,7 @@ const MarkerPage = () => {
     };
 
     useEffect(() => {
-        fetchMarkers();
+        fetchPositions();
     }, []);
 
     return (
@@ -47,9 +51,9 @@ const MarkerPage = () => {
                     <CircularProgress />
                 </div>
             ) : (
-                <MarkerMap markers={markers} />
+                <MarkerMap markers={markers} circles={circles} />
             )}
-            {isOpenFilters && <FiltersModal onClose={onClose} fetchMap={fetchMarkers} />}
+            {isOpenFilters && <FiltersModal onClose={onClose} fetchMap={fetchPositions} />}
         </>
     );
 };
