@@ -1,10 +1,10 @@
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from '../../app.m.scss';
 import MarkerMap from '../MarkerMap/MarkerMap';
-import * as MapService from '../../services/MapService';
 import { IFilterParams } from '../../models/IFilterParams';
-import { TCircle } from '../../models/IPositions';
+import { mapsActions, mapsSelectors } from '../../ducks/maps';
 
 const initialParams = {
     sportsFacility: [],
@@ -16,25 +16,11 @@ const initialParams = {
 } as IFilterParams;
 
 const MarkerPage = () => {
-    const [circles, setCircles] = useState([] as TCircle[]);
-    const [markers, setMarkers] = useState([]);
-    const [isFetching, setIsFetching] = useState(false);
-
-    const fetchPositions = useCallback(async (params = initialParams) => {
-        setIsFetching(true);
-        try {
-            const responseMarkers = await MapService.fetchPositions(params);
-
-            setMarkers(responseMarkers.markers);
-            setCircles(responseMarkers.circles);
-            setIsFetching(false);
-        } catch {
-            setIsFetching(false);
-        }
-    }, []);
+    const dispatch = useDispatch();
+    const isFetching = useSelector(mapsSelectors.isFetching);
 
     useEffect(() => {
-        fetchPositions();
+        dispatch(mapsActions.fetchPosition(initialParams));
     }, []);
 
     return (
@@ -44,7 +30,7 @@ const MarkerPage = () => {
                     <CircularProgress />
                 </div>
             ) : (
-                <MarkerMap markers={markers} circles={circles} fetchPositions={fetchPositions} />
+                <MarkerMap />
             )}
         </>
     );

@@ -4,17 +4,16 @@ import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { createForm } from 'final-form';
+import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Modal/Modal';
 import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
 import * as MapService from '../../services/MapService';
-import { IFilterParams } from '../../models/IFilterParams';
 import { IDict } from '../../models/IDict';
+import { mapsActions, mapsSelectors } from '../../ducks/maps';
 
 interface IProps {
     onClose: () => void;
-    fetchPositions: (params?: IFilterParams) => Promise<void>;
-    onSwitchCircles: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const filters = [
@@ -26,9 +25,14 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose, fetchPositions, onSwitchCircles }: IProps) => {
+const FiltersModal = ({ onClose }: IProps) => {
+    const hasMarkers = useSelector(mapsSelectors.hasMarkers);
+    const hasCircles = useSelector(mapsSelectors.hasCircles);
+    const hasPolygons = useSelector(mapsSelectors.hasPolygons);
+
     const [acitveFilter, setActiveFilter] = useState('');
     const [dict, setDict] = useState({} as IDict);
+    const dispatch = useDispatch();
 
     const initialValues = {
         sportsFacility: [],
@@ -51,8 +55,16 @@ const FiltersModal = ({ onClose, fetchPositions, onSwitchCircles }: IProps) => {
     }, []);
     const valuesRef = useRef(initialValues);
 
-    const handleSwitch = (e) => {
-        onSwitchCircles(e.target.checked);
+    const handleSwitchMarkers = (e) => {
+        dispatch(mapsActions.switchMarkers(e.target.checked));
+    };
+
+    const handleSwitchCircles = (e) => {
+        dispatch(mapsActions.switchCircles(e.target.checked));
+    };
+
+    const handleSwitchPolygon = (e) => {
+        dispatch(mapsActions.switchPolygons(e.target.checked));
     };
 
     const handleOpen = (filter) => {
@@ -80,7 +92,7 @@ const FiltersModal = ({ onClose, fetchPositions, onSwitchCircles }: IProps) => {
             }, []),
         };
 
-        fetchPositions(params);
+        dispatch(mapsActions.fetchPosition(params));
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);
@@ -119,8 +131,33 @@ const FiltersModal = ({ onClose, fetchPositions, onSwitchCircles }: IProps) => {
                                     <Typography>Слои</Typography>
                                     <FormControlLabel
                                         style={{ marginTop: '10px' }}
-                                        control={<Switch defaultChecked onChange={handleSwitch} />}
-                                        label="Круги"
+                                        control={
+                                            <Switch
+                                                defaultChecked={hasMarkers}
+                                                onChange={handleSwitchMarkers}
+                                            />
+                                        }
+                                        label="Спортивные объекты"
+                                    />
+                                    <FormControlLabel
+                                        style={{ marginTop: '10px' }}
+                                        control={
+                                            <Switch
+                                                onChange={handleSwitchCircles}
+                                                defaultChecked={hasCircles}
+                                            />
+                                        }
+                                        label="Зоны доступности"
+                                    />
+                                    <FormControlLabel
+                                        style={{ marginTop: '10px' }}
+                                        control={
+                                            <Switch
+                                                onChange={handleSwitchPolygon}
+                                                defaultChecked={hasPolygons}
+                                            />
+                                        }
+                                        label="Плотность населения"
                                     />
                                 </>
                             )}
