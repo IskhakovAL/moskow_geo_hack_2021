@@ -2,15 +2,11 @@ import { Marker, Popup } from 'react-leaflet';
 import React from 'react';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { useSelector } from 'react-redux';
-import { MarkerType } from '../../models/IPositions';
 import { mapsSelectors } from '../../ducks/maps';
 
-interface IProps {
-    markers: MarkerType[];
-}
-
-const MarkerList = ({ markers }: IProps) => {
+const MarkerList = () => {
     const hasMarkers = useSelector(mapsSelectors.hasMarkers);
+    const markers = useSelector(mapsSelectors.markers);
 
     if (!hasMarkers) {
         return null;

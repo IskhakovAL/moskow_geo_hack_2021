@@ -9,13 +9,11 @@ import Modal from '../Modal/Modal';
 import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
 import * as MapService from '../../services/MapService';
-import { IFilterParams } from '../../models/IFilterParams';
 import { IDict } from '../../models/IDict';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
 
 interface IProps {
     onClose: () => void;
-    fetchPositions: (params?: IFilterParams) => Promise<void>;
 }
 
 const filters = [
@@ -27,7 +25,7 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose, fetchPositions }: IProps) => {
+const FiltersModal = ({ onClose }: IProps) => {
     const hasMarkers = useSelector(mapsSelectors.hasMarkers);
     const hasCircles = useSelector(mapsSelectors.hasCircles);
     const hasPolygons = useSelector(mapsSelectors.hasPolygons);
@@ -94,7 +92,7 @@ const FiltersModal = ({ onClose, fetchPositions }: IProps) => {
             }, []),
         };
 
-        fetchPositions(params);
+        dispatch(mapsActions.fetchPosition(params));
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);

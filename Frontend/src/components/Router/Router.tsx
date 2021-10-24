@@ -1,10 +1,8 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import PolygonMap from '../PolygonMap/PolygonMap';
 import MarkerPage from '../MarkerPage/MarkerPage';
 
 export const Routes = {
-    POLYGONS: '/population-density',
     MARKERS: '/sports-object',
 };
 
@@ -14,10 +12,6 @@ export default function Router() {
             path: Routes.MARKERS,
             component: MarkerPage,
             exact: true,
-        },
-        {
-            path: Routes.POLYGONS,
-            component: PolygonMap,
         },
     ];
 

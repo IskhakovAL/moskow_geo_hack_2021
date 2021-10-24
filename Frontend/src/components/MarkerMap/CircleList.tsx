@@ -6,18 +6,12 @@ import { useSelector } from 'react-redux';
 import FiltersModal from '../FiltersModal/FiltersModal';
 import useFiltersModal from '../FiltersModal/useFiltersModal';
 import styles from '../../app.m.scss';
-import { TCircle } from '../../models/IPositions';
-import { IFilterParams } from '../../models/IFilterParams';
 import { mapsSelectors } from '../../ducks/maps';
 
-interface IProps {
-    circles: TCircle[];
-    fetchPositions: (params?: IFilterParams) => Promise<void>;
-}
-
-const CircleList = ({ circles, fetchPositions }: IProps) => {
+const CircleList = () => {
     const { isOpenFilters, onClose, onOpen } = useFiltersModal();
     const hasCircles = useSelector(mapsSelectors.hasCircles);
+    const circles = useSelector(mapsSelectors.circles);
 
     return (
         <>
@@ -44,7 +38,7 @@ const CircleList = ({ circles, fetchPositions }: IProps) => {
                       );
                   })
                 : null}
-            {isOpenFilters && <FiltersModal onClose={onClose} fetchPositions={fetchPositions} />}
+            {isOpenFilters && <FiltersModal onClose={onClose} />}
         </>
     );
 };

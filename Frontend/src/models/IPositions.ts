@@ -8,13 +8,10 @@ export type MarkerType = { position: Coordinate; popup: string };
 export interface IPositions {
     markers: MarkerType[];
     circles: TCircle[];
+    polygonList: TPolygon[];
 }
 
 export type TPolygon = { polygon: Coordinate; fillOpacity: number };
-
-export interface IPolygon {
-    polygonList: TPolygon[];
-}
 
 export type TCircle = {
     area: number;

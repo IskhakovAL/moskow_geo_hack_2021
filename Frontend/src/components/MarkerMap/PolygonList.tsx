@@ -2,14 +2,10 @@ import { Polygon } from 'react-leaflet';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { mapsSelectors } from '../../ducks/maps';
-import { TPolygon } from '../../models/IPositions';
 
-interface IProps {
-    polygons: TPolygon[];
-}
-
-const PolygonList = ({ polygons }: IProps) => {
+const PolygonList = () => {
     const hasPolygons = useSelector(mapsSelectors.hasPolygons);
+    const polygons = useSelector(mapsSelectors.polygons);
 
     if (!hasPolygons) {
         return null;
