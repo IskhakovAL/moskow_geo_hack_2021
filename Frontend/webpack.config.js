@@ -201,6 +201,7 @@ module.exports = {
         inline: true,
         compress: true,
         overlay: true,
+        open: true,
         disableHostCheck: true,
         historyApiFallback: true,
         proxy: {

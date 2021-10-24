@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background: #fff;
+    background: #F4FAFF;
     height: 48px;
     width: 100%;
     position: fixed;
@@ -12,5 +12,9 @@
 .link {
     text-decoration: none;
     cursor: pointer;
-    color: black;
+    color: #110932;
+}
+
+.activeLink {
+    color: #EC0E43;
 }
