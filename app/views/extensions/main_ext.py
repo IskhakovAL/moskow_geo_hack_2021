@@ -156,8 +156,7 @@ def generate_polygons():
     moscow_polygon = gpd.GeoDataFrame(moscow_polygon, crs="EPSG:4326", geometry=geometry)
 
     resp = {
-        'polygonList': [],
-        'multiPolygonList': []
+        'polygonList': []
     }
 
     for index, row in moscow_polygon.iterrows():
@@ -170,7 +169,7 @@ def generate_polygons():
 
             resp['polygonList'].append({
                 'polygon': polygon_coords,
-                'opacity': opacity
+                'fillOpacity': opacity
             })
 
         if geometry.geom_type == 'MultiPolygon':
@@ -183,9 +182,9 @@ def generate_polygons():
                 for point in polygon:
                     point[0], point[1] = point[1], point[0]
 
-            resp['multiPolygonList'].append({
-                'multiPolygon': polygon_coords,
-                'opacity': opacity
+            resp['polygonList'].append({
+                'polygon': polygon_coords,
+                'fillOpacity': opacity
             })
 
     with app_context:
@@ -223,7 +222,6 @@ def filtering_merged_objects(form):
                     filters_ids = [int(val) for val in form.get(name)]
                     filtered_merged_objects = filtered_merged_objects[filtered_merged_objects[name_to_id.get(name)].isin(filters_ids)]
 
-        print(filtered_merged_objects.columns)
         filtered_merged_objects = filtered_merged_objects[filtered_merged_objects.columns[:9]].drop_duplicates()
         filtered_merged_objects = filtered_merged_objects[~filtered_merged_objects['latitude'].isnull()]
         locations = list(zip(filtered_merged_objects['latitude'], filtered_merged_objects['longitude']))
@@ -238,27 +236,37 @@ def filtering_merged_objects(form):
 
 
 def generate_locations(form):
-    locations, popups, _, _, _ = filtering_merged_objects(form)
-    resp = []
+    locations, popups,areas, radius, circle_opacity = filtering_merged_objects(form)
+    resp = {
+        'markers': [],
+        'circles': []
+    }
     for i in range(len(locations)):
-        resp.append({
+        resp['markers'].append({
             'position': list(locations[i]),
             'popup': popups[i]
         })
-    return {'markers': resp}
-
-
-def generate_circles(form):
-    locations, _, areas, radius, circle_opacity = filtering_merged_objects(form)
-    resp = []
     for i in range(len(locations)):
-        resp.append({
+        resp['circles'].append({
             'position': list(locations[i]),
             'area': areas[i],
             'radius': radius[i],
-            'circle_opacity': circle_opacity[i]
+            'fillOpacity': circle_opacity[i]
         })
-    return {'circles': resp}
+    return resp
+
+
+# def generate_circles(form):
+#     locations, _, areas, radius, circle_opacity = filtering_merged_objects(form)
+#     resp = []
+#     for i in range(len(locations)):
+#         resp.append({
+#             'position': list(locations[i]),
+#             'area': areas[i],
+#             'radius': radius[i],
+#             'fillOpacity': circle_opacity[i]
+#         })
+#     return {'circles': resp}
 
 
 def get_catalog():
