@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from .extensions import generate_resp, get_catalog, generate_locations, get_polygons
+from .extensions import generate_resp, get_catalog, generate_locations
 
 node = Blueprint('node', __name__)
 
@@ -22,13 +22,3 @@ def api_catalog():
 @node.route('/api/locations', methods=['POST'])
 def api_locations():
     return generate_locations(request.get_json(force=True, silent=True))
-
-
-@node.route('/api/population', methods=['GET'])
-def api_population():
-    return get_polygons()
-
-
-# @node.route('/api/circles', methods=['POST'])
-# def api_circles():
-#     return generate_circles(request.get_json(force=True, silent=True))

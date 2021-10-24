@@ -192,13 +192,6 @@ def generate_polygons():
             g.moscow_polygon = resp
 
 
-def get_polygons():
-    with app_context:
-        if 'moscow_polygon' not in g:
-            return {}
-        return g.moscow_polygon
-
-
 def filtering_merged_objects(form):
     with app_context:
         if 'merged_objects' not in g:
@@ -236,11 +229,16 @@ def filtering_merged_objects(form):
 
 
 def generate_locations(form):
-    locations, popups,areas, radius, circle_opacity = filtering_merged_objects(form)
+    locations, popups, areas, radius, circle_opacity = filtering_merged_objects(form)
     resp = {
         'markers': [],
         'circles': []
     }
+    with app_context:
+        if 'moscow_polygon' not in g:
+            resp.update({'polygonList': []})
+        resp.update(g.moscow_polygon)
+
     for i in range(len(locations)):
         resp['markers'].append({
             'position': list(locations[i]),
@@ -254,19 +252,6 @@ def generate_locations(form):
             'fillOpacity': circle_opacity[i]
         })
     return resp
-
-
-# def generate_circles(form):
-#     locations, _, areas, radius, circle_opacity = filtering_merged_objects(form)
-#     resp = []
-#     for i in range(len(locations)):
-#         resp.append({
-#             'position': list(locations[i]),
-#             'area': areas[i],
-#             'radius': radius[i],
-#             'fillOpacity': circle_opacity[i]
-#         })
-#     return {'circles': resp}
 
 
 def get_catalog():
