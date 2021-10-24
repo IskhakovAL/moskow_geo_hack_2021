@@ -10,9 +10,9 @@ interface IProps {
 const MarkerList = ({ markers }: IProps) => {
     return (
         <MarkerClusterGroup>
-            {markers.map((marker) => {
+            {markers.map((marker, idx) => {
                 return (
-                    <Marker position={[marker.position[0], marker.position[1]]} key={marker.popup}>
+                    <Marker position={[marker.position[0], marker.position[1]]} key={idx}>
                         <Popup>{marker.popup}</Popup>
                     </Marker>
                 );
