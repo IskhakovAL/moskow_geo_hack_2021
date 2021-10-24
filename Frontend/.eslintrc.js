@@ -223,7 +223,7 @@ module.exports = {
         "yoda": ["error", "never", {
             "exceptRange": true
         }],
-        "comma-dangle" : ["error", {
+        "comma-dangle" : ["warn", {
             "arrays": "only-multiline",
             "objects": "only-multiline",
             "imports": "only-multiline",

@@ -8,13 +8,10 @@ export default function Header() {
     return (
         <div className={styles.header}>
             <NavLink className={styles.link} to={Routes.MARKERS}>
-                <Typography>Маркеры</Typography>
+                <Typography>Cпортивные объекты</Typography>
             </NavLink>
             <NavLink className={styles.link} to={Routes.POLYGONS}>
-                <Typography>Полигоны</Typography>
-            </NavLink>
-            <NavLink className={styles.link} to={Routes.CIRCLES}>
-                <Typography>Круги</Typography>
+                <Typography>Плотность населения</Typography>
             </NavLink>
         </div>
     );

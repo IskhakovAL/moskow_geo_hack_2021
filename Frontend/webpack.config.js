@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
@@ -28,7 +28,7 @@ const optimization = () => {
 };
 
 const getPlugins = () => {
-    return [
+    const plugins = [
         new HtmlWebpackPlugin({
             template: './public/index.html',
             favicon: './public/favicon.ico',
@@ -40,6 +40,29 @@ const getPlugins = () => {
         new CleanWebpackPlugin(),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru/),
     ];
+
+    if (isDevelopment) {
+        plugins.push(
+            new webpack.HotModuleReplacementPlugin(),
+            new ForkTsCheckerWebpackPlugin({
+                async: true,
+                typescript: {
+                    diagnosticOptions: {
+                        semantic: true,
+                        syntactic: true,
+                    },
+                    configOverwrite: {
+                        compilerOptions: {
+                            noUnusedLocals: false,
+                        },
+                    },
+                },
+                logger: { infrastructure: 'silent', issues: 'console', devServer: true },
+            }),
+        );
+    }
+
+    return plugins;
 };
 const babelOptions = (...presets) => {
     const opts = {
@@ -70,7 +93,7 @@ const jsLoaders = (...presets) => {
     ];
 
     if (isDevelopment) {
-        // loaders.push('eslint-loader');
+        loaders.push('eslint-loader');
     }
 
     return loaders;

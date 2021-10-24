@@ -1,7 +1,7 @@
 import { Marker, Popup } from 'react-leaflet';
 import React from 'react';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import { MarkerType } from '../../services/MapService';
+import { MarkerType } from '../../models/IPositions';
 
 interface IProps {
     markers: MarkerType[];

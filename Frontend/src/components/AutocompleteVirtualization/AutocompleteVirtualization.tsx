@@ -9,6 +9,7 @@ import Popper from '@mui/material/Popper';
 import { useTheme, styled } from '@mui/material/styles';
 import { VariableSizeList } from 'react-window';
 import Typography from '@mui/material/Typography';
+import { DictItem } from '../../models/IDict';
 
 const LISTBOX_PADDING = 8; // px
 
@@ -20,6 +21,7 @@ function renderRow(props) {
         top: style.top + LISTBOX_PADDING,
     };
 
+    // eslint-disable-next-line no-prototype-builtins
     if (dataSet.hasOwnProperty('group')) {
         return (
             <ListSubheader key={dataSet.key} component="div" style={inlineStyle}>
@@ -40,6 +42,7 @@ const OuterElementContext = React.createContext({});
 const OuterElementType = React.forwardRef((props, ref) => {
     const outerProps = React.useContext(OuterElementContext);
 
+    // @ts-ignore
     return <div ref={ref} {...props} {...outerProps} />;
 });
 
@@ -60,6 +63,7 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) 
 
     const itemData = [];
 
+    // @ts-ignore
     children.forEach((item) => {
         itemData.push(item);
         itemData.push(...(item.children || []));
@@ -74,6 +78,7 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) 
     const itemSize = smUp ? 36 : 48;
 
     const getChildSize = (child) => {
+        // eslint-disable-next-line no-prototype-builtins
         if (child.hasOwnProperty('group')) {
             return 48;
         }
@@ -91,6 +96,7 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) 
     const gridRef = useResetCache(itemCount);
 
     return (
+        // @ts-ignore
         <div ref={ref}>
             <OuterElementContext.Provider value={other}>
                 <VariableSizeList
@@ -112,6 +118,7 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(props, ref) 
 });
 
 ListboxComponent.propTypes = {
+    // @ts-ignore
     children: PropTypes.node,
 };
 
@@ -135,9 +142,10 @@ export default function AutocompleteVirtualization({ options, label, name }) {
             sx={{ width: 300 }}
             disableListWrap
             PopperComponent={StyledPopper}
+            // @ts-ignore
             ListboxComponent={ListboxComponent}
             options={options}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option: DictItem) => option.name}
             renderInput={(params) => <TextField {...params} label={label} variant="standard" />}
             renderOption={(props, option) => [props, option]}
             renderGroup={(params) => params}

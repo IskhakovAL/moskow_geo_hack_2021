@@ -7,19 +7,14 @@ import { createForm } from 'final-form';
 import Modal from '../Modal/Modal';
 import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
-import { IDict } from '../../services/MapService';
 import * as MapService from '../../services/MapService';
+import { IFilterParams } from '../../models/IFilterParams';
+import { IDict } from '../../models/IDict';
 
 interface IProps {
     onClose: () => void;
-    fetchMap: (params?: {
-        sportsFacility: any[];
-        sportsZonesList: any[];
-        departmentalAffiliation: any[];
-        sportsServices: any[];
-        availability: any[];
-        sportsZonesTypes: any[];
-    }) => Promise<void>;
+    fetchPositions: (params?: IFilterParams) => Promise<void>;
+    onSwitchCircles: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const filters = [
@@ -31,7 +26,7 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose, fetchMap }: IProps) => {
+const FiltersModal = ({ onClose, fetchPositions, onSwitchCircles }: IProps) => {
     const [acitveFilter, setActiveFilter] = useState('');
     const [dict, setDict] = useState({} as IDict);
 
@@ -56,7 +51,9 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
     }, []);
     const valuesRef = useRef(initialValues);
 
-    const handleSwitch = () => {};
+    const handleSwitch = (e) => {
+        onSwitchCircles(e.target.checked);
+    };
 
     const handleOpen = (filter) => {
         setActiveFilter(filter);
@@ -83,7 +80,7 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
             }, []),
         };
 
-        fetchMap(params);
+        fetchPositions(params);
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);
@@ -107,9 +104,8 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
                                 <>
                                     <div className={styles.border}>
                                         {filters.map((filter) => (
-                                            <>
+                                            <React.Fragment key={filter.component}>
                                                 <Button
-                                                    key={filter.component}
                                                     className={styles.filterButton}
                                                     onClick={() => handleOpen(filter.component)}
                                                     endIcon={<KeyboardArrowRightIcon />}
@@ -117,7 +113,7 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
                                                     {filter.name}
                                                 </Button>
                                                 <br />
-                                            </>
+                                            </React.Fragment>
                                         ))}
                                     </div>
                                     <Typography>Слои</Typography>

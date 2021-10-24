@@ -144,5 +144,6 @@ const BASE_URL = 'api/';
 export default new Client(
     BASE_URL,
     () => '',
-    () => new Promise((resolve, reject) => resolve(null))
+    // eslint-disable-next-line compat/compat
+    () => new Promise((resolve, reject) => resolve(null)),
 );

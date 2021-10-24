@@ -2,6 +2,8 @@ import queryString from 'query-string';
 import noop from 'lodash/noop';
 import merge from 'lodash/merge';
 
+const CONTENT_TYPE = 'Content-Type';
+
 export class BaseHttpError extends Error {
     name = 'BaseHttpError';
 
@@ -54,7 +56,7 @@ function unpackFetchResponse(responseType: ResponseType) {
         let contentType = '';
 
         if (response && response.headers) {
-            contentType = response.headers.get('Content-Type') || '';
+            contentType = response.headers.get(CONTENT_TYPE) || '';
         }
 
         if (responseType === ResponseType.ARRAY_BUFFER) {
@@ -85,6 +87,7 @@ export interface ITransport {
 type TTransportFn = (args: ITransport) => Promise<object>;
 
 const fetchTransport: TTransportFn = ({ url, opts, responseType }) => {
+    // eslint-disable-next-line compat/compat
     return fetch(url, opts)
         .then(unpackFetchResponse(responseType))
         .then(handleFetchErrors);
@@ -103,7 +106,7 @@ export type THeaders = {
     Authorization?: string;
     pragma?: string;
     'Cache-Control'?: string;
-    'Content-Type'?: string;
+    CONTENT_TYPE?: string;
 };
 
 type TData = object | FormData | string;
@@ -282,7 +285,7 @@ export default class BaseHttpClient {
         }
 
         const resultHeaders = {
-            'Content-Type': 'application/json',
+            CONTENT_TYPE: 'application/json',
             Accept: [ResponseType.BLOB, ResponseType.ARRAY_BUFFER].includes(responseType)
                 ? ''
                 : 'application/json',
@@ -296,7 +299,7 @@ export default class BaseHttpClient {
             const isFormData = typeof FormData !== 'undefined' && data instanceof FormData;
 
             if (isFormData) {
-                resultHeaders['Content-Type'] = '';
+                resultHeaders[CONTENT_TYPE] = '';
             } else if (resultHeaders['Content-Type'] === 'application/x-www-form-urlencoded') {
                 body = this.getUrlEncodedFormBody(data);
             } else {
