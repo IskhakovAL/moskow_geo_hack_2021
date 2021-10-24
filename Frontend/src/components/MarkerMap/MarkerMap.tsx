@@ -2,16 +2,18 @@ import React from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerList from './MarkerList';
 import CircleList from './CircleList';
-import { MarkerType, TCircle } from '../../models/IPositions';
+import { MarkerType, TCircle, TPolygon } from '../../models/IPositions';
 import { IFilterParams } from '../../models/IFilterParams';
+import PolygonList from './PolygonList';
 
 interface IProps {
     markers: MarkerType[];
     circles: TCircle[];
+    polygons: TPolygon[];
     fetchPositions: (params?: IFilterParams) => Promise<void>;
 }
 
-function MarkerMap({ markers, circles, fetchPositions }: IProps) {
+function MarkerMap({ markers, circles, polygons, fetchPositions }: IProps) {
     return (
         <MapContainer
             style={{ height: 'calc(100vh - 48px)', marginTop: '48px' }}
@@ -24,6 +26,7 @@ function MarkerMap({ markers, circles, fetchPositions }: IProps) {
             />
             <MarkerList markers={markers} />
             <CircleList circles={circles} fetchPositions={fetchPositions} />
+            <PolygonList polygons={polygons} />
         </MapContainer>
     );
 }

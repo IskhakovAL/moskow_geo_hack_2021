@@ -1,12 +1,14 @@
 import { Circle } from 'react-leaflet';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton } from '@mui/material';
+import { useSelector } from 'react-redux';
 import FiltersModal from '../FiltersModal/FiltersModal';
 import useFiltersModal from '../FiltersModal/useFiltersModal';
 import styles from '../../app.m.scss';
 import { TCircle } from '../../models/IPositions';
 import { IFilterParams } from '../../models/IFilterParams';
+import { mapsSelectors } from '../../ducks/maps';
 
 interface IProps {
     circles: TCircle[];
@@ -15,11 +17,7 @@ interface IProps {
 
 const CircleList = ({ circles, fetchPositions }: IProps) => {
     const { isOpenFilters, onClose, onOpen } = useFiltersModal();
-    const [hasCircle, setHasCircle] = useState(Boolean(circles.length));
-
-    useEffect(() => {
-        setHasCircle(Boolean(circles.length));
-    }, [circles.length]);
+    const hasCircles = useSelector(mapsSelectors.hasCircles);
 
     return (
         <>
@@ -28,7 +26,7 @@ const CircleList = ({ circles, fetchPositions }: IProps) => {
                     <ArrowBackIcon />
                 </IconButton>
             </div>
-            {hasCircle
+            {hasCircles
                 ? circles.map((circle, idx) => {
                       const hasArea = circle.area !== 0;
 
@@ -46,13 +44,7 @@ const CircleList = ({ circles, fetchPositions }: IProps) => {
                       );
                   })
                 : null}
-            {isOpenFilters && (
-                <FiltersModal
-                    onClose={onClose}
-                    fetchPositions={fetchPositions}
-                    onSwitchCircles={setHasCircle}
-                />
-            )}
+            {isOpenFilters && <FiltersModal onClose={onClose} fetchPositions={fetchPositions} />}
         </>
     );
 };

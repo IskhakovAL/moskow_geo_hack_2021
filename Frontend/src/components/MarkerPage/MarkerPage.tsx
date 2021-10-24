@@ -4,7 +4,7 @@ import styles from '../../app.m.scss';
 import MarkerMap from '../MarkerMap/MarkerMap';
 import * as MapService from '../../services/MapService';
 import { IFilterParams } from '../../models/IFilterParams';
-import { TCircle } from '../../models/IPositions';
+import { TCircle, TPolygon } from '../../models/IPositions';
 
 const initialParams = {
     sportsFacility: [],
@@ -18,15 +18,19 @@ const initialParams = {
 const MarkerPage = () => {
     const [circles, setCircles] = useState([] as TCircle[]);
     const [markers, setMarkers] = useState([]);
+    const [polygons, setPolygons] = useState([] as TPolygon[]);
+
     const [isFetching, setIsFetching] = useState(false);
 
     const fetchPositions = useCallback(async (params = initialParams) => {
         setIsFetching(true);
         try {
             const responseMarkers = await MapService.fetchPositions(params);
+            const responsePolygons = await MapService.fetchPolygons();
 
             setMarkers(responseMarkers.markers);
             setCircles(responseMarkers.circles);
+            setPolygons(responsePolygons.polygonList);
             setIsFetching(false);
         } catch {
             setIsFetching(false);
@@ -44,7 +48,12 @@ const MarkerPage = () => {
                     <CircularProgress />
                 </div>
             ) : (
-                <MarkerMap markers={markers} circles={circles} fetchPositions={fetchPositions} />
+                <MarkerMap
+                    markers={markers}
+                    circles={circles}
+                    polygons={polygons}
+                    fetchPositions={fetchPositions}
+                />
             )}
         </>
     );
