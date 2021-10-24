@@ -1,11 +1,10 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CircularProgress from '@mui/material/CircularProgress';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from '../../app.m.scss';
 import MarkerMap from '../MarkerMap/MarkerMap';
-import FiltersModal from '../FiltersModal/FiltersModal';
 import * as MapService from '../../services/MapService';
-import useFiltersModal from '../FiltersModal/useFiltersModal';
+import { IFilterParams } from '../../models/IFilterParams';
+import { TCircle } from '../../models/IPositions';
 
 const initialParams = {
     sportsFacility: [],
@@ -14,42 +13,40 @@ const initialParams = {
     sportsZonesTypes: [],
     sportsServices: [],
     availability: [],
-};
+} as IFilterParams;
 
 const MarkerPage = () => {
+    const [circles, setCircles] = useState([] as TCircle[]);
     const [markers, setMarkers] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
-    const { isOpenFilters, onOpen, onClose } = useFiltersModal();
 
-    const fetchMarkers = async (params = initialParams) => {
+    const fetchPositions = useCallback(async (params = initialParams) => {
         setIsFetching(true);
         try {
-            const response = await MapService.fetchMarkers(params);
+            const responseMarkers = await MapService.fetchMarkers(params);
+            const responseCircles = await MapService.fetchCircles(params);
 
-            setMarkers(response.markers);
+            setMarkers(responseMarkers.markers);
+            setCircles(responseCircles.circles);
             setIsFetching(false);
         } catch {
             setIsFetching(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        fetchMarkers();
+        fetchPositions();
     }, []);
 
     return (
         <>
-            <div className={styles.arrow}>
-                <ArrowBackIcon onClick={onOpen} />
-            </div>
             {isFetching ? (
                 <div className={styles.loader}>
                     <CircularProgress />
                 </div>
             ) : (
-                <MarkerMap markers={markers} />
+                <MarkerMap markers={markers} circles={circles} fetchPositions={fetchPositions} />
             )}
-            {isOpenFilters && <FiltersModal onClose={onClose} fetchMap={fetchMarkers} />}
         </>
     );
 };

@@ -23,7 +23,6 @@ export default function Availability() {
                                 <Field name={`availability.${String(opt.id)}`} type="checkbox">
                                     {(props) => (
                                         <>
-                                            {console.log(props.input)}
                                             <Checkbox
                                                 name={props.input.name}
                                                 onChange={props.input.onChange}

@@ -2,6 +2,11 @@
   display: flex;
 }
 
+.border {
+  border-bottom: 1px solid #e0e4eb;
+  margin-bottom: 24px;
+}
+
 .filterButton {
   min-width: 356px !important;
   display: flex !important;

@@ -2,12 +2,10 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import PolygonMap from '../PolygonMap/PolygonMap';
 import MarkerPage from '../MarkerPage/MarkerPage';
-import CirclesPage from '../CirclesPage/CirclesPage';
 
 export const Routes = {
-    POLYGONS: '/polygons',
-    MARKERS: '/markers',
-    CIRCLES: '/circles',
+    POLYGONS: '/population-density',
+    MARKERS: '/sports-object',
 };
 
 export default function Router() {
@@ -20,10 +18,6 @@ export default function Router() {
         {
             path: Routes.POLYGONS,
             component: PolygonMap,
-        },
-        {
-            path: Routes.CIRCLES,
-            component: CirclesPage,
         },
     ];
 

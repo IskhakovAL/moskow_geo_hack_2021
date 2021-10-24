@@ -1,25 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Button } from '@mui/material';
+import { Button, FormControlLabel, Switch, Typography } from '@mui/material';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { createForm } from 'final-form';
 import Modal from '../Modal/Modal';
 import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
-import { IDict } from '../../services/MapService';
 import * as MapService from '../../services/MapService';
+import { IFilterParams } from '../../models/IFilterParams';
+import { IDict } from '../../models/IDict';
 
 interface IProps {
     onClose: () => void;
-    fetchMap: (params?: {
-        sportsFacility: any[];
-        sportsZonesList: any[];
-        departmentalAffiliation: any[];
-        sportsServices: any[];
-        availability: any[];
-        sportsZonesTypes: any[];
-    }) => Promise<void>;
+    fetchPositions: (params?: IFilterParams) => Promise<void>;
+    onSwitchCircles: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const filters = [
@@ -31,7 +26,7 @@ const filters = [
     { component: 'Availability', name: 'Доступность' },
 ];
 
-const FiltersModal = ({ onClose, fetchMap }: IProps) => {
+const FiltersModal = ({ onClose, fetchPositions, onSwitchCircles }: IProps) => {
     const [acitveFilter, setActiveFilter] = useState('');
     const [dict, setDict] = useState({} as IDict);
 
@@ -55,6 +50,10 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
         fetchDict();
     }, []);
     const valuesRef = useRef(initialValues);
+
+    const handleSwitch = (e) => {
+        onSwitchCircles(e.target.checked);
+    };
 
     const handleOpen = (filter) => {
         setActiveFilter(filter);
@@ -81,7 +80,7 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
             }, []),
         };
 
-        fetchMap(params);
+        fetchPositions(params);
     };
 
     const form = useMemo(() => createForm({ onSubmit }), []);
@@ -103,19 +102,26 @@ const FiltersModal = ({ onClose, fetchMap }: IProps) => {
                         <form onSubmit={handleSubmit}>
                             {!acitveFilter && (
                                 <>
-                                    {filters.map((filter) => (
-                                        <>
-                                            <Button
-                                                key={filter.component}
-                                                className={styles.filterButton}
-                                                onClick={() => handleOpen(filter.component)}
-                                                endIcon={<KeyboardArrowRightIcon />}
-                                            >
-                                                {filter.name}
-                                            </Button>
-                                            <br />
-                                        </>
-                                    ))}
+                                    <div className={styles.border}>
+                                        {filters.map((filter) => (
+                                            <React.Fragment key={filter.component}>
+                                                <Button
+                                                    className={styles.filterButton}
+                                                    onClick={() => handleOpen(filter.component)}
+                                                    endIcon={<KeyboardArrowRightIcon />}
+                                                >
+                                                    {filter.name}
+                                                </Button>
+                                                <br />
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+                                    <Typography>Слои</Typography>
+                                    <FormControlLabel
+                                        style={{ marginTop: '10px' }}
+                                        control={<Switch defaultChecked onChange={handleSwitch} />}
+                                        label="Круги"
+                                    />
                                 </>
                             )}
                             {acitveFilter && (

@@ -13,8 +13,6 @@ const PolygonMap = () => {
         try {
             const response = await MapService.fetchPolygons();
 
-            console.log(response);
-
             setPolygons(response);
             setIsFetching(false);
         } catch {
