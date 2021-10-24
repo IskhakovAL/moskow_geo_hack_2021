@@ -23,11 +23,10 @@ const MarkerPage = () => {
     const fetchPositions = useCallback(async (params = initialParams) => {
         setIsFetching(true);
         try {
-            const responseMarkers = await MapService.fetchMarkers(params);
-            const responseCircles = await MapService.fetchCircles(params);
+            const responseMarkers = await MapService.fetchPositions(params);
 
             setMarkers(responseMarkers.markers);
-            setCircles(responseCircles.circles);
+            setCircles(responseMarkers.circles);
             setIsFetching(false);
         } catch {
             setIsFetching(false);
