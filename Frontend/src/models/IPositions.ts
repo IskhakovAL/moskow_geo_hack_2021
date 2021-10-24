@@ -5,22 +5,20 @@ interface Coordinate {
 
 export type MarkerType = { position: Coordinate; popup: string };
 
-export interface IMarkers {
+export interface IPositions {
     markers: MarkerType[];
+    circles: TCircle[];
 }
 
+export type TPolygon = { polygon: Coordinate; fillOpacity: number };
+
 export interface IPolygon {
-    polygonList: { polygon: Coordinate; opacity: number }[];
-    multiPolygonList: { multiPolygon: Coordinate; opacity: number }[];
+    polygonList: TPolygon[];
 }
 
 export type TCircle = {
     area: number;
-    circle_opacity: number;
+    fillOpacity: number;
     position: Coordinate;
     radius: number;
 };
-
-export interface ICircles {
-    circles: TCircle[];
-}

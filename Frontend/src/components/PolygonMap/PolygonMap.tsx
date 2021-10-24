@@ -3,10 +3,11 @@ import { Polygon, MapContainer, TileLayer } from 'react-leaflet';
 import CircularProgress from '@mui/material/CircularProgress';
 import * as MapService from '../../services/MapService';
 import styles from '../../app.m.scss';
+import { TPolygon } from '../../models/IPositions';
 
 const PolygonMap = () => {
     const [isFetching, setIsFetching] = useState(false);
-    const [polygons, setPolygons] = useState({ polygonList: [], multiPolygonList: [] });
+    const [polygons, setPolygons] = useState({ polygonList: [] as TPolygon[] });
 
     const fetchPolygons = async () => {
         setIsFetching(true);
@@ -40,18 +41,11 @@ const PolygonMap = () => {
                 </div>
             ) : (
                 <>
-                    {polygons.multiPolygonList.map((polygon, idx) => (
-                        <Polygon
-                            key={idx}
-                            pathOptions={{ fillOpacity: polygon.opacity }}
-                            positions={polygon.multiPolygon}
-                        />
-                    ))}
                     {polygons.polygonList.map((polygon, idx) => (
                         <Polygon
                             key={idx}
-                            pathOptions={{ fillOpacity: polygon.opacity }}
-                            positions={polygon.polygon}
+                            pathOptions={{ fillOpacity: polygon.fillOpacity, color: '#EC0E43' }}
+                            positions={polygon.polygon as any}
                         />
                     ))}
                 </>
