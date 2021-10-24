@@ -2,6 +2,17 @@
   display: flex;
 }
 
+.arrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-right: 15px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
 .border {
   border-bottom: 1px solid #e0e4eb;
   margin-bottom: 24px;
