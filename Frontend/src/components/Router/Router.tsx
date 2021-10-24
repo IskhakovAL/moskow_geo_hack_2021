@@ -4,8 +4,8 @@ import PolygonMap from '../PolygonMap/PolygonMap';
 import MarkerPage from '../MarkerPage/MarkerPage';
 
 export const Routes = {
-    POLYGONS: '/polygons',
-    MARKERS: '/markers',
+    POLYGONS: '/population-density',
+    MARKERS: '/sports-object',
 };
 
 export default function Router() {
