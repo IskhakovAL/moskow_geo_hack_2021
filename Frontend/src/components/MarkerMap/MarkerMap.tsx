@@ -3,7 +3,6 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerList from './MarkerList';
 import CircleList from './CircleList';
 import PolygonList from './PolygonList';
-import FiltersModal from '../FiltersModal/FiltersModal';
 
 function MarkerMap() {
     return (
@@ -17,7 +16,6 @@ function MarkerMap() {
                 <CircleList />
                 <PolygonList />
             </MapContainer>
-            <FiltersModal />
         </>
     );
 }
