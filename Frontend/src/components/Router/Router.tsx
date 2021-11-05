@@ -1,9 +1,11 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import MarkerPage from '../MarkerPage/MarkerPage';
+import Dashbords from '../Dashbords/Dashbords';
 
 export const Routes = {
     MARKERS: '/sports-object',
+    DASHBORDS: '/dashbords',
 };
 
 export default function Router() {
@@ -11,6 +13,11 @@ export default function Router() {
         {
             path: Routes.MARKERS,
             component: MarkerPage,
+            exact: true,
+        },
+        {
+            path: Routes.DASHBORDS,
+            component: Dashbords,
             exact: true,
         },
     ];

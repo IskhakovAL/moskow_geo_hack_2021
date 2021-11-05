@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './components/Router/Router';
 import AuthUtils from './utils/AuthUtils';
+import Header from './components/Header/Header';
 
 function App() {
     const { login } = AuthUtils.getAuthMetadata();
@@ -13,6 +14,7 @@ function App() {
 
     return (
         <BrowserRouter>
+            <Header />
             <Router />
         </BrowserRouter>
     );

@@ -111,7 +111,7 @@ module.exports = {
             "allowShortCircuit": true,
             "allowTernary": true
         }],
-        "no-underscore-dangle": [2, {
+        "no-underscore-dangle": [1, {
             "allow": ["_exception", "__html"]
         }],
         "jsx-a11y/img-has-alt": 0, // Ложные срабатывания был 0

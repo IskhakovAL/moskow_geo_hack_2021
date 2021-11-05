@@ -14,15 +14,15 @@ function MapClickHandler() {
     const analytics = useSelector(mapsSelectors.analytics);
     const filters = useSelector(mapsSelectors.filters);
     const dispatch = useDispatch();
-    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-    const map = useMapEvents({
+
+    useMapEvents({
         click: (e) => {
             if (analytics === 'dot') {
                 dispatch(
                     mapsActions.fetchPointInfo({
                         pointCoord: [e.latlng.lng, e.latlng.lat],
                         ...filters,
-                    })
+                    }),
                 );
             }
         },
@@ -73,7 +73,7 @@ function MarkerMap() {
         <>
             <MapContainer
                 id="MAP_CONTAINER"
-                style={{ height: '100vh' }}
+                style={{ height: '100vh', marginTop: '48px' }}
                 center={[55.7522, 37.6156]}
                 zoom={9}
             >

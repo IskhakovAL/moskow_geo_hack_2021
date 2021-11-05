@@ -4,6 +4,7 @@ import * as MapService from '../services/MapService';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
 import IStore from '../models/IStore';
 import { IFilterParams } from '../models/IFilterParams';
+import { IPlots, Plot } from '../models/IPlots';
 
 const switchMarkers = createActionCreator(
     'maps/switchMarkers [success]',
@@ -53,7 +54,7 @@ const fetchPosition = (params: IFilterParams) => async (dispatch) => {
 
 const fetchPointInfoStart = createActionCreator(
     'maps/fetchPointInfoStart [..]',
-    (resolve) => (payload: Coordinate) => resolve(payload)
+    (resolve) => (payload: Coordinate) => resolve(payload),
 );
 
 const fetchPointInfoSuccess = createActionCreator(
@@ -80,7 +81,7 @@ const fetchPointInfo = (data: PointParams) => async (dispatch) => {
 const fetchEmptyZonesStart = createActionCreator('maps/fetchEmptyZonesStart [..]');
 const fetchEmptyZonesSuccess = createActionCreator(
     'maps/fetchEmptyZonesSuccess [success]',
-    (resolve) => (payload) => resolve(payload),
+    (resolve) => (payload: { polygonList: TPolygon[] }) => resolve(payload),
 );
 const fetchEmptyZonesError = createActionCreator(
     'maps/fetchEmptyZonesError [error]',
@@ -98,6 +99,29 @@ const fetchEmptyZones = (params: IFilterParams) => async (dispatch) => {
     }
 };
 
+const fetchPlotsStart = createActionCreator('maps/fetchPlotsStart [..]');
+const fetchPlotsSuccess = createActionCreator(
+    'maps/fetchPlotsSuccess [success]',
+    (resolve) => (payload: IPlots) => resolve(payload),
+);
+const fetchPlotsError = createActionCreator(
+    'maps/fetchPlotsError [error]',
+    (resolve) => (err: Error) => resolve(err.message),
+);
+
+const fetchPlots = () => async (dispatch) => {
+    dispatch(fetchPlotsStart());
+    try {
+        const response = await MapService.fetchPlots();
+
+        console.log(response);
+
+        dispatch(fetchPlotsSuccess(response));
+    } catch (err) {
+        dispatch(fetchPlotsError(err));
+    }
+};
+
 export const mapsSelectors = {
     hasMarkers: (state: IStore) => state.maps.hasMarkers,
     hasCircles: (state: IStore) => state.maps.hasCircles,
@@ -109,6 +133,7 @@ export const mapsSelectors = {
     circles: (state: IStore) => state.maps.circles,
     polygons: (state: IStore) => state.maps.polygons,
     pointInfo: (state: IStore) => state.maps.pointInfo,
+    plots: (state: IStore) => state.maps.plots,
     pointCoord: (state: IStore) => state.maps.pointCoord,
     emptyZones: (state: IStore) => state.maps.emptyZones,
 };
@@ -121,6 +146,7 @@ export const mapsActions = {
     fetchPosition,
     fetchPointInfo,
     fetchEmptyZones,
+    fetchPlots,
 };
 
 const initialState = {
@@ -131,6 +157,7 @@ const initialState = {
     analytics: '',
     pointCoord: {} as Coordinate,
     filters: {} as IFilterParams,
+    plots: [] as Plot[],
     pointInfo: {} as IPointInfo,
     markers: [] as MarkerType[],
     circles: [] as TCircle[],
@@ -208,6 +235,12 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             emptyZones: payload.polygonList[0],
+        };
+    }),
+    handleAction(fetchPlotsSuccess, (state, { payload }) => {
+        return {
+            ...state,
+            plots: payload.plots,
         };
     }),
 ]);

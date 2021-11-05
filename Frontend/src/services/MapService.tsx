@@ -1,10 +1,11 @@
 import Client from '../client/Client';
 import { RequestMethod, ResponseType } from '../client/BaseHttpClient';
 import { IFilterParams } from '../models/IFilterParams';
-import { IPositions } from '../models/IPositions';
+import { IPositions, TPolygon } from '../models/IPositions';
 import { IDict } from '../models/IDict';
 import AuthUtils from '../utils/AuthUtils';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
+import { IPlots } from '../models/IPlots';
 
 export const fetchPositions = (params: IFilterParams) => {
     const { login } = AuthUtils.getAuthMetadata();
@@ -18,7 +19,7 @@ export const fetchPositions = (params: IFilterParams) => {
 export const fetchEmptyZones = (params: IFilterParams) => {
     const { login } = AuthUtils.getAuthMetadata();
 
-    return Client.doRequest<IPositions>(`emptyZones/${login}`, {
+    return Client.doRequest<{ polygonList: TPolygon[] }>(`emptyZones/${login}`, {
         method: RequestMethod.POST,
         data: params,
     });
@@ -51,6 +52,10 @@ export const fetchPointInfoFile = (data: PointParams) => {
         data,
         responseType: ResponseType.BLOB,
     });
+};
+
+export const fetchPlots = () => {
+    return Client.doRequest<IPlots>('plots');
 };
 
 export const fetchDict = () => Client.doRequest<IDict>('catalog');
