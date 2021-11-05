@@ -3,8 +3,11 @@ from os import getcwd, path
 import numpy as np
 import geopandas as gpd
 from shapely import wkt
+from shapely.geometry import mapping
 
 from ..redis_helper import RedisHelper
+
+from ..local_config import CRS_4326
 
 
 def generate_polygons():
@@ -19,39 +22,9 @@ def generate_polygons():
                                           right_on='municipality')
 
     geometry = moscow_polygon['geometry'].map(wkt.loads)
-    moscow_polygon = gpd.GeoDataFrame(moscow_polygon, crs="EPSG:4326", geometry=geometry)
-
-    resp = {
-        'polygonList': []
-    }
-
-    for index, row in moscow_polygon.iterrows():
-        geometry = row['geometry']
-        opacity = row['opacity']
-
-        if geometry.geom_type == 'Polygon':
-            polygon_coords = list(geometry.exterior.coords)
-            polygon_coords = [[x[1], x[0]] for x in polygon_coords]
-
-            resp['polygonList'].append({
-                'polygon': polygon_coords,
-                'fillOpacity': opacity
-            })
-
-        if geometry.geom_type == 'MultiPolygon':
-            polygon_coords = []
-            for b in geometry.boundary:
-                coords = np.dstack(b.coords.xy).tolist()
-                polygon_coords.append(*coords)
-
-            for polygon in polygon_coords:
-                for point in polygon:
-                    point[0], point[1] = point[1], point[0]
-
-            resp['polygonList'].append({
-                'polygon': polygon_coords,
-                'fillOpacity': opacity
-            })
+    moscow_polygon = gpd.GeoDataFrame(moscow_polygon, crs=CRS_4326, geometry=geometry)
+    moscow_polygon['geometry'] = moscow_polygon['geometry'].apply(
+        lambda row: mapping(row))
 
     rs = RedisHelper()
-    rs.insert(resp, 'moscow_polygon', False)
+    rs.insert(moscow_polygon, 'moscow_polygon')

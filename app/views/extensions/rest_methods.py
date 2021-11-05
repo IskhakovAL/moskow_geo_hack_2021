@@ -1,11 +1,14 @@
 from .redis_helper import RedisHelper
-from .rest_logic import filtering_main_objects, generate_polygons_intersections, filtering_gpd_objects
-from .local_config import CATALOG_DICT, MOSCOW_POLYGONS_DICT, USER_MAIN_DATASET
+from .rest_logic import filtering_main_objects, generate_polygons_intersections, filtering_gpd_objects,\
+    generate_empty_zones, zip_shape
+from .local_config import CATALOG_DICT, MOSCOW_POLYGONS_DATASET, USER_MAIN_DATASET, USER_GPD_DATASET,\
+    CRS_4326, CRS_3857
 
-from os import path, listdir
-from zipfile import ZipFile
-from tempfile import TemporaryDirectory
-from io import BytesIO
+from shapely.ops import cascaded_union
+from shapely.geometry import shape
+import geopandas as gpd
+
+import numpy as np
 
 
 rh = RedisHelper()
@@ -50,8 +53,39 @@ def get_locations(form, uid):
     resp = {
         'markers': [],
         'circles': [],
+        'polygonList': []
     }
-    resp.update(rh.get(MOSCOW_POLYGONS_DICT, False))
+    moscow_polygon = rh.get(MOSCOW_POLYGONS_DATASET)
+    moscow_polygon['geometry'] = moscow_polygon['geometry'].apply(
+        lambda row: shape(row))
+    # TODO CHECK
+    for index, row in moscow_polygon.iterrows():
+        geometry = row['geometry']
+        opacity = row['opacity']
+
+        if geometry.geom_type == 'Polygon':
+            polygon_coords = list(geometry.exterior.coords)
+            polygon_coords = [[x[1], x[0]] for x in polygon_coords]
+
+            resp['polygonList'].append({
+                'polygon': polygon_coords,
+                'fillOpacity': opacity
+            })
+
+        if geometry.geom_type == 'MultiPolygon':
+            polygon_coords = []
+            for b in geometry.boundary:
+                coords = np.dstack(b.coords.xy).tolist()
+                polygon_coords.append(*coords)
+
+            for polygon in polygon_coords:
+                for point in polygon:
+                    point[0], point[1] = point[1], point[0]
+
+            resp['polygonList'].append({
+                'polygon': polygon_coords,
+                'fillOpacity': opacity
+            })
 
     for i in range(len(locations)):
         resp['markers'].append({
@@ -70,6 +104,7 @@ def get_locations(form, uid):
 
 def get_point_information(form, uid):
     intersection_new = generate_polygons_intersections(form, uid)
+
     resp = intersection_new[intersection_new.columns[:3]].to_dict('records')[0]
 
     geometry = intersection_new['geometry'].iloc[0]
@@ -85,20 +120,37 @@ def get_point_information(form, uid):
 def get_point_shape_archive(form, uid):
     intersection_new = generate_polygons_intersections(form, uid)
     intersection_new[intersection_new.columns[:3]] = intersection_new[intersection_new.columns[:3]].astype(str)
-    archive = BytesIO()
 
-    with TemporaryDirectory() as tmp_dir:
-        shape_file = path.join(tmp_dir, 'result.shp')
-        intersection_new.to_file(shape_file, driver='ESRI Shapefile')
+    return zip_shape(intersection_new)
 
-        with ZipFile(archive, 'w') as zip_archive:
 
-            for file_name in listdir(tmp_dir):
-                if 'result' in file_name:
-                    with zip_archive.open(file_name, 'w') as zip_file:
-                        with open(path.join(tmp_dir, file_name), 'rb') as file:
-                            zip_file.write(file.read())
+def get_empty_zones(form, uid):
+    difference_df = generate_empty_zones(form, uid)
+    difference = cascaded_union(
+        difference_df['geometry']
+    )
 
-    archive.seek(0)
+    resp = {
+        'polygonList': []
+    }
+    polygon_coords = []
+    for b in difference.boundary:
+        coords = np.dstack(b.coords.xy).tolist()
+        polygon_coords.append(*coords)
 
-    return archive
+    for polygon in polygon_coords:
+        for point in polygon:
+            point[0], point[1] = point[1], point[0]
+
+    resp['polygonList'].append({
+        'polygon': polygon_coords,
+        'fillOpacity': 1
+    })
+
+    return resp
+
+
+def get_empty_zones_archive(form, uid):
+    difference_df = generate_empty_zones(form, uid)
+
+    return zip_shape(difference_df)

@@ -1,2 +1,4 @@
 from .filtering import filtering_main_objects, filtering_gpd_objects
 from .polygons_intersections import generate_polygons_intersections
+from .empty_zones import generate_empty_zones
+from .shape_zipper import zip_shape

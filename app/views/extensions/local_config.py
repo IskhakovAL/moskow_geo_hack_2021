@@ -13,7 +13,7 @@ CRS_3857 = CRS('EPSG:3857')
 MAIN_DATASET = 'main0'
 GPD_DATASET = 'main1'
 CATALOG_DICT = 'catalog'
-MOSCOW_POLYGONS_DICT = 'moscow_polygon'
+MOSCOW_POLYGONS_DATASET = 'moscow_polygon'
 
 USER_MAIN_DATASET = '{}:0'
 USER_GPD_DATASET = '{}:1'
