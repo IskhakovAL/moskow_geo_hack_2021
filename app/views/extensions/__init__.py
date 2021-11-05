@@ -1,4 +1,2 @@
-from .main_ext import generate_resp, preprocessing,\
-    app_context, generate_catalog, get_catalog, generate_locations,\
-    generate_polygons
-from .create_app import create_app
+from .preprocessing import preprocessing
+from .rest_methods import generate_resp, get_catalog, get_locations, get_point_information
