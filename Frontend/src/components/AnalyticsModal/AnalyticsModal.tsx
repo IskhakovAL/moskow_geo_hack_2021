@@ -18,7 +18,7 @@ const AnalyticsModal = () => {
     const analytics = useSelector(mapsSelectors.analytics);
     const filters = useSelector(mapsSelectors.filters);
     const pointCoord = useSelector(mapsSelectors.pointCoord);
-    const areaCoord = [];
+    const rectangleCoord = useSelector(mapsSelectors.rectangleCoord);
 
     const isDotAnalytics = analytics === 'dot';
     const isEmptyAnalytics = analytics === 'empty';
@@ -69,6 +69,12 @@ const AnalyticsModal = () => {
                 .then(FileUtils.downloadZip)
                 .catch(() => ({}));
         }
+
+        if (isAreaAnalytics) {
+            MapService.fetchRectangleFile({ rectangleCoord, ...filters })
+                .then(FileUtils.downloadZip)
+                .catch(() => ({}));
+        }
     };
     const disabled = useMemo(() => {
         if (isDotAnalytics) {
@@ -76,13 +82,13 @@ const AnalyticsModal = () => {
         }
 
         if (isAreaAnalytics) {
-            return !Object.keys(areaCoord).length;
+            return !rectangleCoord.length;
         }
 
         if (!analytics) {
             return true;
         }
-    }, [analytics, areaCoord, pointCoord]);
+    }, [analytics, rectangleCoord, pointCoord]);
 
     return (
         <div className={styles.modal}>

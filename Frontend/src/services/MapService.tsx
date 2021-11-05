@@ -6,6 +6,7 @@ import { IDict } from '../models/IDict';
 import AuthUtils from '../utils/AuthUtils';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
 import { IPlots } from '../models/IPlots';
+import { IRectangleInfo, RectangleParams } from '../models/IReactangleInfo';
 
 export const fetchPositions = (params: IFilterParams) => {
     const { login } = AuthUtils.getAuthMetadata();
@@ -48,6 +49,25 @@ export const fetchPointInfoFile = (data: PointParams) => {
     const { login } = AuthUtils.getAuthMetadata();
 
     return Client.doRequest(`pointInfoFile/${login}`, {
+        method: RequestMethod.POST,
+        data,
+        responseType: ResponseType.BLOB,
+    });
+};
+
+export const fetchRectangleInfo = (data: PointParams) => {
+    const { login } = AuthUtils.getAuthMetadata();
+
+    return Client.doRequest<IRectangleInfo>(`rectangleInfo/${login}`, {
+        method: RequestMethod.POST,
+        data,
+    });
+};
+
+export const fetchRectangleFile = (data: RectangleParams) => {
+    const { login } = AuthUtils.getAuthMetadata();
+
+    return Client.doRequest(`rectangleInfoFile/${login}`, {
         method: RequestMethod.POST,
         data,
         responseType: ResponseType.BLOB,
