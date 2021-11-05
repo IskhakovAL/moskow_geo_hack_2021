@@ -9,6 +9,7 @@ import PolygonMap from './PolygonMap';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
 import PointPolygon from './PointPolygon';
 import EmptyZones from './EmptyZones';
+import RectanglePolygon from '../RectanglePolygon/RectanglePolygon';
 
 function MapClickHandler() {
     const analytics = useSelector(mapsSelectors.analytics);
@@ -32,6 +33,8 @@ function MapClickHandler() {
 }
 
 function AreaSelect() {
+    const dispatch = useDispatch();
+    const filters = useSelector(mapsSelectors.filters);
     const analytics = useSelector(mapsSelectors.analytics);
     const map = useMap();
 
@@ -48,6 +51,16 @@ function AreaSelect() {
             map.on('areaselected', (e) => {
                 // @ts-ignore
                 L.rectangle(e.bounds, { color: 'blue', weight: 1 }).addTo(map);
+                dispatch(
+                    mapsActions.fetchRectangleInfo({
+                        // @ts-ignore
+                        rectangleCoord: e.bounds
+                            .toBBoxString()
+                            .split(',')
+                            .map(Number),
+                        ...filters,
+                    }),
+                );
             });
 
             // You can restrict selection area like this:
@@ -63,7 +76,7 @@ function AreaSelect() {
             // @ts-ignore
             map.selectArea.setValidate();
         }
-    }, []);
+    }, [analytics]);
 
     return null;
 }
@@ -73,7 +86,7 @@ function MarkerMap() {
         <>
             <MapContainer
                 id="MAP_CONTAINER"
-                style={{ height: '100vh', marginTop: '48px' }}
+                style={{ height: 'calc(100vh - 48px)', marginTop: '48px' }}
                 center={[55.7522, 37.6156]}
                 zoom={9}
             >
@@ -85,6 +98,7 @@ function MarkerMap() {
                 <CircleList />
                 <PolygonMap />
                 <PointPolygon />
+                <RectanglePolygon />
                 <EmptyZones />
                 <MapClickHandler />
                 <AreaSelect />
