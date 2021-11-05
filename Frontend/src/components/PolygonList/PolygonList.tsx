@@ -1,23 +1,19 @@
 import { Polygon } from 'react-leaflet';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { mapsSelectors } from '../../ducks/maps';
+import { TPolygon } from '../../models/IPositions';
 
-const PolygonList = () => {
-    const hasPolygons = useSelector(mapsSelectors.hasPolygons);
-    const polygons = useSelector(mapsSelectors.polygons);
+interface IProps {
+    polygons: TPolygon[];
+}
 
-    if (!hasPolygons) {
-        return null;
-    }
-
+const PolygonList = ({ polygons }: IProps) => {
     return (
         <>
             {polygons.map((polygon, idx) => (
                 <Polygon
                     key={idx}
                     pathOptions={{ fillOpacity: polygon.fillOpacity, color: '#EC0E43' }}
-                    positions={polygon.polygon as any}
+                    positions={polygon.polygon}
                 />
             ))}
         </>

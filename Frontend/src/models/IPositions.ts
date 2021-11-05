@@ -1,3 +1,5 @@
+import { LatLngExpression } from 'leaflet';
+
 export interface Coordinate {
     0: number;
     1: number;
@@ -11,7 +13,10 @@ export interface IPositions {
     polygonList: TPolygon[];
 }
 
-export type TPolygon = { polygon: Coordinate; fillOpacity: number };
+export type TPolygon = {
+    polygon: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][];
+    fillOpacity: number;
+};
 
 export type TCircle = {
     area: number;
