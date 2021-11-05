@@ -4,12 +4,15 @@ import { Button, FormControlLabel, IconButton, Switch, Typography } from '@mui/m
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useDispatch } from 'react-redux';
 import Modal from '../Modal/Modal';
 import { DictContext } from '../../context/context';
 import styles from './filtersModal.m.scss';
 import * as MapService from '../../services/MapService';
 import { IDict } from '../../models/IDict';
 import useFiltersModal from './useFiltersModal';
+import { mapsActions } from '../../ducks/maps';
+import FormUtils from '../../utils/FormUtils';
 
 const filters = [
     { component: 'SportsFacility', name: 'Наименование спортивного объекта' },
@@ -85,10 +88,18 @@ const FiltersModal = () => {
                                 ? valuesRef.current
                                 : initialValues
                         }
-                        render={({ values, handleSubmit }) => {
+                        render={({ values, handleSubmit, dirty }) => {
+                            // eslint-disable-next-line react-hooks/rules-of-hooks
+                            const dispatch = useDispatch();
+
                             // eslint-disable-next-line react-hooks/rules-of-hooks
                             useEffect(() => {
                                 valuesRef.current = values;
+                                if (dirty) {
+                                    const params = FormUtils.encodeFormValues(values);
+
+                                    dispatch(mapsActions.saveFilters(params));
+                                }
                             }, [values]);
                             return (
                                 <form onSubmit={handleSubmit}>

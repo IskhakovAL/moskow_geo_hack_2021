@@ -1,6 +1,9 @@
 import { createActionCreator, createReducer } from 'deox';
 import { IPositions, MarkerType, TCircle, TPolygon } from '../models/IPositions';
 import * as MapService from '../services/MapService';
+import { IPointInfo, PointParams } from '../models/IPointInfo';
+import IStore from '../models/IStore';
+import { IFilterParams } from '../models/IFilterParams';
 
 const switchMarkers = createActionCreator(
     'maps/switchMarkers [success]',
@@ -15,6 +18,16 @@ const switchCircles = createActionCreator(
 const switchPolygons = createActionCreator(
     'maps/switchPolygon [success]',
     (resolve) => (payload: boolean) => resolve(payload),
+);
+
+const saveFilters = createActionCreator(
+    'maps/saveFilters [success]',
+    (resolve) => (payload: IFilterParams) => resolve(payload),
+);
+
+const changeAnalytics = createActionCreator(
+    'maps/changeAnalytics [success]',
+    (resolve) => (payload: string) => resolve(payload),
 );
 
 const fetchPositionsStart = createActionCreator('maps/fetchPositionsStart [..]');
@@ -38,20 +51,49 @@ const fetchPosition = (params) => async (dispatch) => {
     }
 };
 
+const fetchPointInfoStart = createActionCreator('maps/fetchPointInfoStart [..]');
+
+const fetchPointInfoSuccess = createActionCreator(
+    'maps/fetchPointInfoSuccess [success]',
+    (resolve) => (payload: IPointInfo) => resolve(payload),
+);
+
+const fetchPointInfoError = createActionCreator(
+    'maps/fetchPointInfoError [error]',
+    (resolve) => (err: Error) => resolve(err.message),
+);
+
+const fetchPointInfo = (data: PointParams) => async (dispatch) => {
+    dispatch(fetchPointInfoStart());
+    try {
+        const response = await MapService.fetchPointInfo(data);
+
+        dispatch(fetchPointInfoSuccess(response));
+    } catch (err) {
+        dispatch(fetchPointInfoError(err));
+    }
+};
+
 export const mapsSelectors = {
-    hasMarkers: (state) => state.maps.hasMarkers,
-    hasCircles: (state) => state.maps.hasCircles,
-    hasPolygons: (state) => state.maps.hasPolygons,
-    isFetching: (state) => state.maps.isFetching,
-    markers: (state) => state.maps.markers,
-    circles: (state) => state.maps.circles,
-    polygons: (state) => state.maps.polygons,
+    hasMarkers: (state: IStore) => state.maps.hasMarkers,
+    hasCircles: (state: IStore) => state.maps.hasCircles,
+    hasPolygons: (state: IStore) => state.maps.hasPolygons,
+    analytics: (state: IStore) => state.maps.analytics,
+    filters: (state: IStore) => state.maps.filters,
+    isFetching: (state: IStore) => state.maps.isFetching,
+    markers: (state: IStore) => state.maps.markers,
+    circles: (state: IStore) => state.maps.circles,
+    polygons: (state: IStore) => state.maps.polygons,
+    pointInfo: (state: IStore) => state.maps.pointInfo,
 };
 export const mapsActions = {
     switchMarkers,
     switchCircles,
     switchPolygons,
+    saveFilters,
+    changeAnalytics,
     fetchPosition,
+    fetchPointInfo,
 };
 
 const initialState = {
@@ -59,10 +101,15 @@ const initialState = {
     hasPolygons: false,
     hasCircles: false,
     isFetching: false,
+    analytics: '',
+    filters: {} as IFilterParams,
+    pointInfo: {} as IPointInfo,
     markers: [] as MarkerType[],
     circles: [] as TCircle[],
     polygons: [] as TPolygon[],
 };
+
+export type IMapsState = typeof initialState;
 
 export default createReducer(initialState, (handleAction) => [
     handleAction(switchMarkers, (state, { payload }) => {
@@ -81,6 +128,18 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             hasPolygons: payload,
+        };
+    }),
+    handleAction(saveFilters, (state, { payload }) => {
+        return {
+            ...state,
+            filters: payload,
+        };
+    }),
+    handleAction(changeAnalytics, (state, { payload }) => {
+        return {
+            ...state,
+            analytics: payload,
         };
     }),
     handleAction(fetchPositionsStart, (state) => {
@@ -102,6 +161,12 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             isFetching: false,
+        };
+    }),
+    handleAction(fetchPointInfoSuccess, (state, { payload }) => {
+        return {
+            ...state,
+            pointInfo: payload,
         };
     }),
 ]);
