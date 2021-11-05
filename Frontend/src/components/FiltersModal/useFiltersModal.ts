@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createForm } from 'final-form';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
+import FormUtils from '../../utils/FormUtils';
 
 export default function useFiltersModal() {
     const dispatch = useDispatch();
@@ -32,21 +33,9 @@ export default function useFiltersModal() {
     }, []);
 
     const onSubmit = useCallback(async (values) => {
-        const params = {
-            sportsFacility: values.sportsFacility.map((item) => item.id),
-            departmentalAffiliation: values.departmentalAffiliation.map((item) => item.id),
-            sportsZonesList: values.sportsZonesList.map((item) => item.id),
-            sportsZonesTypes: values.sportsZonesTypes.map((item) => item.id),
-            sportsServices: values.sportsServices.map((item) => item.id),
-            availability: Object.keys(values.availability).reduce((acc, key) => {
-                if (values.availability[key]) {
-                    acc.push(key);
-                }
+        const params = FormUtils.encodeFormValues(values);
 
-                return acc;
-            }, []),
-        };
-
+        dispatch(mapsActions.saveFilters(params));
         dispatch(mapsActions.fetchPosition(params));
     }, []);
 

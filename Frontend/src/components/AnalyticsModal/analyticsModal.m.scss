@@ -1,0 +1,18 @@
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 100px;
+  margin-left: 50px;
+  background: #fff;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.switch {
+  display: flex;
+  margin: 0;
+  justify-content: space-around;
+}

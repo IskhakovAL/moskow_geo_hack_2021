@@ -6,6 +6,7 @@ import MarkerMap from '../MarkerMap/MarkerMap';
 import { IFilterParams } from '../../models/IFilterParams';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
 import FiltersModal from '../FiltersModal/FiltersModal';
+import AnalyticsModal from '../AnalyticsModal/AnalyticsModal';
 
 const initialParams = {
     sportsFacility: [],
@@ -33,6 +34,7 @@ const MarkerPage = () => {
             ) : (
                 <MarkerMap />
             )}
+            <AnalyticsModal />
             <FiltersModal />
         </>
     );
