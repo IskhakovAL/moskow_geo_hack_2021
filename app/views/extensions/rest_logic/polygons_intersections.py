@@ -1,5 +1,4 @@
 import geopandas as gpd
-from shapely import wkt
 from shapely.geometry import Point, shape
 from ..redis_helper import RedisHelper
 from shapely.ops import cascaded_union

@@ -1,7 +1,8 @@
 from flask import Blueprint, request, send_file
 
 from .extensions import generate_resp, get_catalog, get_locations, get_point_information,\
-    get_point_shape_archive, get_empty_zones, get_empty_zones_archive, get_plots
+    get_point_shape_archive, get_empty_zones, get_empty_zones_archive, get_plots,\
+    get_rectangle_shape_archive, get_rectangle_information
 
 node = Blueprint('node', __name__)
 
@@ -49,6 +50,21 @@ def api_empty_zones(uid):
 def api_empty_zones_file(uid):
     return send_file(
         get_empty_zones_archive(request.get_json(force=True, silent=True), uid),
+        as_attachment=True,
+        attachment_filename='shape.zip',
+        mimetype='application/zip'
+    )
+
+
+@node.route('/api/rectangleInfo/<string:uid>', methods=['POST'])
+def api_rectangle(uid):
+    return get_rectangle_information(request.get_json(force=True, silent=True), uid)
+
+
+@node.route('/api/rectangleInfoFile/<string:uid>', methods=['POST'])
+def api_rectangle_file(uid):
+    return send_file(
+        get_rectangle_shape_archive(request.get_json(force=True, silent=True), uid),
         as_attachment=True,
         attachment_filename='shape.zip',
         mimetype='application/zip'

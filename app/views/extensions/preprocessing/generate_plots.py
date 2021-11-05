@@ -29,7 +29,7 @@ def generate_plots(data_obj, data_zone):
                  title='Типы спортзон',
                  hover_data=['zones_type'], labels={'Тип спортзоны'})
     fig.update_traces(textposition='inside', textinfo='percent+label')
-    plots.append(dumps(fig, cls=PlotlyJSONEncoder))
+    plots.append(loads(dumps(fig, cls=PlotlyJSONEncoder)))
 
     sum_counts_type_sport.loc[sum_counts_type_sport['count'] < 234, 'sport_type'] = 'Остальные виды спорта'
     fig = px.pie(sum_counts_type_sport, values='count', names='sport_type',

@@ -1,6 +1,6 @@
 from .redis_helper import RedisHelper
 from .rest_logic import filtering_main_objects, generate_polygons_intersections, filtering_gpd_objects,\
-    generate_empty_zones, zip_shape
+    generate_empty_zones, zip_shape, generate_objects_intersections
 from .local_config import CATALOG_DICT, MOSCOW_POLYGONS_DATASET, USER_MAIN_DATASET, PLOTS_ARRAY
 
 from shapely.ops import cascaded_union
@@ -56,7 +56,7 @@ def get_locations(form, uid):
     moscow_polygon = rh.get(MOSCOW_POLYGONS_DATASET)
     moscow_polygon['geometry'] = moscow_polygon['geometry'].apply(
         lambda row: shape(row))
-    # TODO CHECK
+
     for index, row in moscow_polygon.iterrows():
         geometry = row['geometry']
         opacity = row['opacity']
@@ -120,6 +120,28 @@ def get_point_shape_archive(form, uid):
     intersection_new[intersection_new.columns[:3]] = intersection_new[intersection_new.columns[:3]].astype(str)
 
     return zip_shape(intersection_new)
+
+
+def get_rectangle_information(form, uid):
+    result_rectangle = generate_objects_intersections(form, uid)
+    resp = result_rectangle[result_rectangle.columns[:3]].to_dict('records')[0]
+
+    geometry = result_rectangle['geometry'].iloc[0]
+
+    polygon_coords = []
+    if not geometry.is_empty:
+        polygon_coords = list(geometry.exterior.coords)
+        polygon_coords = [[x[1], x[0]] for x in polygon_coords]
+
+    resp.update({'polygonList': polygon_coords})
+
+    return resp
+
+def get_rectangle_shape_archive(form, uid):
+    result_rectangle = generate_objects_intersections(form, uid)
+    result_rectangle[result_rectangle.columns[:3]] = result_rectangle[result_rectangle.columns[:3]].astype(str)
+
+    return zip_shape(result_rectangle)
 
 
 def get_empty_zones(form, uid):
