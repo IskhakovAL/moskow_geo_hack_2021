@@ -14,6 +14,7 @@ MAIN_DATASET = 'main0'
 GPD_DATASET = 'main1'
 CATALOG_DICT = 'catalog'
 MOSCOW_POLYGONS_DATASET = 'moscow_polygon'
+PLOTS_ARRAY = 'plots'
 
 USER_MAIN_DATASET = '{}:0'
 USER_GPD_DATASET = '{}:1'

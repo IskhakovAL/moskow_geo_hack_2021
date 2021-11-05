@@ -1,7 +1,7 @@
 from flask import Blueprint, request, send_file
 
 from .extensions import generate_resp, get_catalog, get_locations, get_point_information,\
-    get_point_shape_archive, get_empty_zones, get_empty_zones_archive
+    get_point_shape_archive, get_empty_zones, get_empty_zones_archive, get_plots
 
 node = Blueprint('node', __name__)
 
@@ -53,3 +53,8 @@ def api_empty_zones_file(uid):
         attachment_filename='shape.zip',
         mimetype='application/zip'
     )
+
+
+@node.route('/api/plots', methods=['GET'])
+def api_plots():
+    return get_plots()

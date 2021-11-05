@@ -8,6 +8,7 @@ from ..redis_helper import RedisHelper
 
 from .generate_polygons import generate_polygons
 from .generate_catalog import generate_catalog
+from .generate_plots import generate_plots
 
 from ..local_config import MAIN_DATASET, GPD_DATASET, CRS_3857, CRS_4326
 
@@ -33,6 +34,8 @@ def preprocessing():
                            'zones_id', 'zones_name', 'zones_type',
                            'availability_id', 'availability_name',
                            'sport_type', 'latitude', 'longitude', 'zones_square']
+
+    generate_plots(all_object, object_type)
 
     area = [0] * all_object.shape[0]
     for i, row in object_type.iterrows():

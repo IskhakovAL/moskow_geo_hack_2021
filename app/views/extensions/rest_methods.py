@@ -1,12 +1,10 @@
 from .redis_helper import RedisHelper
 from .rest_logic import filtering_main_objects, generate_polygons_intersections, filtering_gpd_objects,\
     generate_empty_zones, zip_shape
-from .local_config import CATALOG_DICT, MOSCOW_POLYGONS_DATASET, USER_MAIN_DATASET, USER_GPD_DATASET,\
-    CRS_4326, CRS_3857
+from .local_config import CATALOG_DICT, MOSCOW_POLYGONS_DATASET, USER_MAIN_DATASET, PLOTS_ARRAY
 
 from shapely.ops import cascaded_union
 from shapely.geometry import shape
-import geopandas as gpd
 
 import numpy as np
 
@@ -154,3 +152,11 @@ def get_empty_zones_archive(form, uid):
     difference_df = generate_empty_zones(form, uid)
 
     return zip_shape(difference_df)
+
+
+def get_plots():
+    plots = rh.get(PLOTS_ARRAY, False)
+    resp = {
+        'plots': plots
+    }
+    return resp
