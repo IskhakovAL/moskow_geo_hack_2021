@@ -1,2 +1,2 @@
-from .filtering import filtering_objects
+from .filtering import filtering_main_objects, filtering_gpd_objects
 from .polygons_intersections import generate_polygons_intersections

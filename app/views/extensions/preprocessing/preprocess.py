@@ -9,7 +9,7 @@ from ..redis_helper import RedisHelper
 from .generate_polygons import generate_polygons
 from .generate_catalog import generate_catalog
 
-from ..local_config import MAIN_DATASET, GPD_DATASET
+from ..local_config import MAIN_DATASET, GPD_DATASET, CRS_3857, CRS_4326
 
 
 def preprocessing():
@@ -102,9 +102,9 @@ def preprocessing():
         geometry=gpd.points_from_xy(
             merged_objects.longitude,
             merged_objects.latitude),
-        crs="EPSG:4326"
+        crs=CRS_4326
     )
-    merged_objects_gdf = merged_objects_gdf.to_crs({'init': 'epsg:3857'})
+    merged_objects_gdf = merged_objects_gdf.to_crs(CRS_3857)
     merged_objects_gdf = merged_objects_gdf[~merged_objects_gdf['latitude'].isnull()]
 
     merged_objects_gdf['geometry'] = merged_objects_gdf.apply(

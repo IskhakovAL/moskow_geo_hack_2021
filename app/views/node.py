@@ -1,6 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 
-from .extensions import generate_resp, get_catalog, get_locations, get_point_information
+from .extensions import generate_resp, get_catalog, get_locations, get_point_information,\
+    get_point_shape_archive
 
 node = Blueprint('node', __name__)
 
@@ -25,5 +26,15 @@ def api_locations(uid):
 
 
 @node.route('/api/pointInfo/<string:uid>', methods=['POST'])
-def api_polygons(uid):
+def api_point(uid):
     return get_point_information(request.get_json(force=True, silent=True), uid)
+
+
+@node.route('/api/pointInfoFile/<string:uid>', methods=['POST'])
+def api_point_file(uid):
+    return send_file(
+        get_point_shape_archive(request.get_json(force=True, silent=True), uid),
+        as_attachment=True,
+        attachment_filename='shape.zip',
+        mimetype='application/zip'
+    )

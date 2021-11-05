@@ -1,6 +1,11 @@
 from .redis_helper import RedisHelper
-from .rest_logic import filtering_objects, generate_polygons_intersections
+from .rest_logic import filtering_main_objects, generate_polygons_intersections, filtering_gpd_objects
 from .local_config import CATALOG_DICT, MOSCOW_POLYGONS_DICT, USER_MAIN_DATASET
+
+from os import path, listdir
+from zipfile import ZipFile
+from tempfile import TemporaryDirectory
+from io import BytesIO
 
 
 rh = RedisHelper()
@@ -28,7 +33,7 @@ def get_catalog():
 
 
 def get_locations(form, uid):
-    filtering_objects(form, uid)
+    filtering_main_objects(form, uid)
 
     filtered_merged_objects = rh.get(USER_MAIN_DATASET.format(uid))
     filtered_merged_objects = filtered_merged_objects[filtered_merged_objects.columns[:9]].drop_duplicates()
@@ -45,8 +50,8 @@ def get_locations(form, uid):
     resp = {
         'markers': [],
         'circles': [],
-        'polygonList': rh.get(MOSCOW_POLYGONS_DICT, False)
     }
+    resp.update(rh.get(MOSCOW_POLYGONS_DICT, False))
 
     for i in range(len(locations)):
         resp['markers'].append({
@@ -64,4 +69,36 @@ def get_locations(form, uid):
 
 
 def get_point_information(form, uid):
-    return generate_polygons_intersections(form, uid)
+    intersection_new = generate_polygons_intersections(form, uid)
+    resp = intersection_new[intersection_new.columns[:3]].to_dict('records')[0]
+
+    geometry = intersection_new['geometry'].iloc[0]
+    polygon_coords = []
+    if not geometry.is_empty:
+        polygon_coords = list(geometry.exterior.coords)
+        polygon_coords = [[x[1], x[0]] for x in polygon_coords]
+
+    resp.update({'polygonList': polygon_coords})
+    return resp
+
+
+def get_point_shape_archive(form, uid):
+    intersection_new = generate_polygons_intersections(form, uid)
+    intersection_new[intersection_new.columns[:3]] = intersection_new[intersection_new.columns[:3]].astype(str)
+    archive = BytesIO()
+
+    with TemporaryDirectory() as tmp_dir:
+        shape_file = path.join(tmp_dir, 'result.shp')
+        intersection_new.to_file(shape_file, driver='ESRI Shapefile')
+
+        with ZipFile(archive, 'w') as zip_archive:
+
+            for file_name in listdir(tmp_dir):
+                if 'result' in file_name:
+                    with zip_archive.open(file_name, 'w') as zip_file:
+                        with open(path.join(tmp_dir, file_name), 'rb') as file:
+                            zip_file.write(file.read())
+
+    archive.seek(0)
+
+    return archive

@@ -4,19 +4,19 @@ from shapely.geometry import Point, shape
 from ..redis_helper import RedisHelper
 from shapely.ops import cascaded_union
 from itertools import combinations
-from .filtering import filtering_objects
+from .filtering import filtering_gpd_objects
 
-from ..local_config import USER_GPD_DATASET
+from ..local_config import USER_GPD_DATASET, CRS_3857, CRS_4326
 
 
 def generate_polygons_intersections(form, uid):
     rh = RedisHelper()
     point_coord = form.pop('pointCoord')
-    filtering_objects(form, uid)
+    filtering_gpd_objects(form, uid)
+
     point = [Point(point_coord[0], point_coord[1])]
-    s = gpd.GeoDataFrame({'geometry': point})
-    s.crs = {'init': 'epsg:4326', 'no_defs': True}
-    s = s.to_crs({'init': 'epsg:3857'})
+    s = gpd.GeoDataFrame({'geometry': point}, crs=CRS_4326)
+    s = s.to_crs(CRS_3857)
 
     merged_objects_gdf = rh.get(USER_GPD_DATASET.format(uid))
     merged_objects_gdf['geometry'] = merged_objects_gdf['geometry'].apply(lambda row: shape(row))
@@ -28,13 +28,12 @@ def generate_polygons_intersections(form, uid):
     intersection = cascaded_union(
         [a.intersection(b) for a, b in combinations(merged_objects_intersect['geometry'], 2)]
     )
-    resp = {
-        'totalAreaOfSportsZones': total_area_of_sports_zones,
-        'typesOfSportsZones': types_of_sports_zones,
-        'typesOfSportsServices': types_of_sports_services,
-        'polygonList': []
-    }
-    polygon_coords = list(intersection.exterior.coords)
-    polygon_coords = [[x[1], x[0]] for x in polygon_coords]
-    resp['polygonList'] = polygon_coords
-    return resp
+    intersection_new = gpd.GeoDataFrame({
+        'totalAreaOfSportsZones': [total_area_of_sports_zones],
+        'typesOfSportsZones': [types_of_sports_zones],
+        'typesOfSportsServices': [types_of_sports_services],
+        'geometry': [intersection]
+    }, crs=CRS_3857)
+    intersection_new = intersection_new.to_crs(CRS_4326)
+
+    return intersection_new
