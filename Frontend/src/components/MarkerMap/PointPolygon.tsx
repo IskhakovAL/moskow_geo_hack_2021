@@ -5,8 +5,9 @@ import { mapsSelectors } from '../../ducks/maps';
 
 const PointPolygon = () => {
     const pointInfo = useSelector(mapsSelectors.pointInfo);
+    const analytics = useSelector(mapsSelectors.analytics);
 
-    if (!Object.keys(pointInfo).length) {
+    if (!Object.keys(pointInfo).length || analytics !== 'dot') {
         return null;
     }
 

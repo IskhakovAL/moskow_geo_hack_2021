@@ -5,9 +5,10 @@ import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import { useDispatch, useSelector } from 'react-redux';
 import MarkerList from './MarkerList';
 import CircleList from './CircleList';
-import PolygonList from './PolygonList';
+import PolygonMap from './PolygonMap';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
 import PointPolygon from './PointPolygon';
+import EmptyZones from './EmptyZones';
 
 function MapClickHandler() {
     const analytics = useSelector(mapsSelectors.analytics);
@@ -82,8 +83,9 @@ function MarkerMap() {
                 />
                 <MarkerList />
                 <CircleList />
-                <PolygonList />
+                <PolygonMap />
                 <PointPolygon />
+                <EmptyZones />
                 <MapClickHandler />
                 <AreaSelect />
             </MapContainer>

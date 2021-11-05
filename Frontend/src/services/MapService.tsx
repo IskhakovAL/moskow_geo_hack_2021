@@ -1,5 +1,5 @@
 import Client from '../client/Client';
-import { RequestMethod } from '../client/BaseHttpClient';
+import { RequestMethod, ResponseType } from '../client/BaseHttpClient';
 import { IFilterParams } from '../models/IFilterParams';
 import { IPositions } from '../models/IPositions';
 import { IDict } from '../models/IDict';
@@ -15,6 +15,25 @@ export const fetchPositions = (params: IFilterParams) => {
     });
 };
 
+export const fetchEmptyZones = (params: IFilterParams) => {
+    const { login } = AuthUtils.getAuthMetadata();
+
+    return Client.doRequest<IPositions>(`emptyZones/${login}`, {
+        method: RequestMethod.POST,
+        data: params,
+    });
+};
+
+export const fetchEmptyZonesFile = (params: IFilterParams) => {
+    const { login } = AuthUtils.getAuthMetadata();
+
+    return Client.doRequest(`emptyZonesFile/${login}`, {
+        method: RequestMethod.POST,
+        data: params,
+        responseType: ResponseType.BLOB,
+    });
+};
+
 export const fetchPointInfo = (data: PointParams) => {
     const { login } = AuthUtils.getAuthMetadata();
 
@@ -23,4 +42,15 @@ export const fetchPointInfo = (data: PointParams) => {
         data,
     });
 };
+
+export const fetchPointInfoFile = (data: PointParams) => {
+    const { login } = AuthUtils.getAuthMetadata();
+
+    return Client.doRequest(`pointInfoFile/${login}`, {
+        method: RequestMethod.POST,
+        data,
+        responseType: ResponseType.BLOB,
+    });
+};
+
 export const fetchDict = () => Client.doRequest<IDict>('catalog');
