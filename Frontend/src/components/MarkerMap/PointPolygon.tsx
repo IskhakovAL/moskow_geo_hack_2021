@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { mapsSelectors } from '../../ducks/maps';
 import ReportModal from '../ReportModal/ReportModal';
-import styles from './emptyZones.m.scss';
+import styles from './pointPolygon.m.scss';
 
 const PointPolygon = () => {
     const pointInfo = useSelector(mapsSelectors.pointInfo);

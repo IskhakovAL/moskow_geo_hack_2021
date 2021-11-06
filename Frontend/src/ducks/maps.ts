@@ -13,6 +13,7 @@ import IStore from '../models/IStore';
 import { IFilterParams } from '../models/IFilterParams';
 import { IPlots, Plot } from '../models/IPlots';
 import { IRectangleInfo } from '../models/IReactangleInfo';
+import { TEmptyZones } from '../models/IEmptyZones';
 
 const switchMarkers = createActionCreator(
     'maps/switchMarkers [success]',
@@ -136,7 +137,7 @@ const fetchRectangleInfo = (data) => async (dispatch) => {
 const fetchEmptyZonesStart = createActionCreator('maps/fetchEmptyZonesStart [..]');
 const fetchEmptyZonesSuccess = createActionCreator(
     'maps/fetchEmptyZonesSuccess [success]',
-    (resolve) => (payload: { polygonList: TPolygon[] }) => resolve(payload),
+    (resolve) => (payload: TEmptyZones) => resolve(payload),
 );
 const fetchEmptyZonesError = createActionCreator(
     'maps/fetchEmptyZonesError [error]',

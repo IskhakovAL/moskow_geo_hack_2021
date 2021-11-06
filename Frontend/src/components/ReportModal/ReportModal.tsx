@@ -7,7 +7,36 @@ import ReactDOM from 'react-dom';
 import styles from './reportModal.m.scss';
 import useReactPortal from '../../hooks/useReactPortal';
 
-const ReportModal = ({ classes = {}, title = 'Отчет', onCloseCallback, children, isFetching }) => {
+type TOnClick = () => void;
+
+export interface IProps {
+    title?: string;
+    children: React.ReactNode;
+    onYes?: TOnClick;
+    onYesDisabled?: boolean;
+    onNo?: TOnClick;
+    onClose?: TOnClick;
+    onYesText?: string;
+    onNoText?: string;
+    onBackdropClick?: TOnClick;
+    disableBodyScroll?: boolean;
+    withBackDrop?: boolean;
+    isFetching?: boolean;
+    classes?: {
+        root?: string;
+        head?: string;
+        closeIcon?: string;
+        content?: string;
+    };
+}
+
+const ReportModal = ({
+    classes = {},
+    title = 'Отчет',
+    onClose = () => {},
+    children,
+    isFetching = false,
+}: IProps) => {
     const modal = (
         <div className={styles.modal}>
             <div className={cn(classes.head, { [styles.head]: !classes.head })}>
@@ -16,7 +45,7 @@ const ReportModal = ({ classes = {}, title = 'Отчет', onCloseCallback, chil
                     className={cn(classes.closeIcon, {
                         [styles.closeIcon]: !classes.closeIcon,
                     })}
-                    onClick={onCloseCallback}
+                    onClick={onClose}
                 >
                     <CloseIcon />
                 </div>

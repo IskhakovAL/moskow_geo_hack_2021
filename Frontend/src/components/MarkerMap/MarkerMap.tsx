@@ -51,6 +51,7 @@ function AreaSelect() {
             map.on('areaselected', (e) => {
                 // @ts-ignore
                 L.rectangle(e.bounds, { color: 'blue', weight: 1 }).addTo(map);
+
                 dispatch(
                     mapsActions.fetchRectangleInfo({
                         // @ts-ignore
