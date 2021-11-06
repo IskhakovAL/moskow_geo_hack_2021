@@ -182,6 +182,7 @@ export const mapsSelectors = {
     analytics: (state: IStore) => state.maps.analytics,
     filters: (state: IStore) => state.maps.filters,
     isFetching: (state: IStore) => state.maps.isFetching,
+    isFetchingPointInfo: (state: IStore) => state.maps.isFetchingPointInfo,
     markers: (state: IStore) => state.maps.markers,
     circles: (state: IStore) => state.maps.circles,
     polygons: (state: IStore) => state.maps.polygons,
@@ -217,11 +218,17 @@ const initialState = {
     filters: {} as IFilterParams,
     plots: [] as Plot[],
     pointInfo: {} as IPointInfo,
+    isFetchingPointInfo: false,
     rectangleInfo: {} as IRectangleInfo,
     markers: [] as MarkerType[],
     circles: [] as TCircle[],
     polygons: [] as TPolygon[],
-    emptyZones: {} as TPolygon,
+    emptyZones: { polygon: {} as TPolygon, area: null, population: null, isFetching: false } as {
+        polygon: TPolygon;
+        area: number;
+        population: number;
+        isFetching: boolean;
+    },
 };
 
 export type IMapsState = typeof initialState;
@@ -267,6 +274,20 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             pointCoord: payload,
+            isFetchingPointInfo: true,
+        };
+    }),
+    handleAction(fetchPointInfoSuccess, (state, { payload }) => {
+        return {
+            ...state,
+            pointInfo: payload,
+            isFetchingPointInfo: false,
+        };
+    }),
+    handleAction(fetchPointInfoError, (state) => {
+        return {
+            ...state,
+            isFetchingPointInfo: false,
         };
     }),
     handleAction(fetchPositionsSuccess, (state, { payload }) => {
@@ -288,12 +309,7 @@ export default createReducer(initialState, (handleAction) => [
             polygons: payload.polygonList,
         };
     }),
-    handleAction(fetchPointInfoSuccess, (state, { payload }) => {
-        return {
-            ...state,
-            pointInfo: payload,
-        };
-    }),
+
     handleAction(fetchRectangleStart, (state, { payload }) => {
         return {
             ...state,
@@ -306,10 +322,32 @@ export default createReducer(initialState, (handleAction) => [
             rectangleInfo: payload,
         };
     }),
+    handleAction(fetchEmptyZonesStart, (state) => {
+        return {
+            ...state,
+            emptyZones: {
+                ...state.emptyZones,
+                isFetching: true,
+            },
+        };
+    }),
     handleAction(fetchEmptyZonesSuccess, (state, { payload }) => {
         return {
             ...state,
-            emptyZones: payload.polygonList[0],
+            emptyZones: {
+                ...payload,
+                polygon: payload.polygonList[0],
+                isFetching: false,
+            },
+        };
+    }),
+    handleAction(fetchEmptyZonesError, (state) => {
+        return {
+            ...state,
+            emptyZones: {
+                ...state.emptyZones,
+                isFetching: false,
+            },
         };
     }),
     handleAction(fetchPlotsSuccess, (state, { payload }) => {

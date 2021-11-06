@@ -1,0 +1,51 @@
+.modal {
+  position: fixed;
+  top: 560px;
+  height: 450px;
+  left: 0;
+  margin-left: 50px;
+  padding: 20px;
+  padding-top: 0;
+  background: #fff;
+  width: 280px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1000;
+}
+
+.content {
+  padding: 24px;
+  height: 100%;
+}
+
+.loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.head {
+  display: flex;
+  height: 71px;
+  border-bottom: 1px solid #e0e4eb;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 24px;
+  flex-shrink: 0;
+}
+
+
+.closeIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 36px;
+  cursor: pointer;
+  padding: 4px;
+  path {
+    fill: #788ba5;
+  }
+}
