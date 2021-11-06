@@ -1,0 +1,31 @@
+@import "../../styles/presets.scss";
+
+.text {
+  font-weight: 700 !important;
+}
+
+.typographyDiv {
+  max-height: 130px !important;
+  overflow: auto !important;
+  margin-bottom: 5px;
+}
+
+.root {
+  box-shadow: $nonClickableShadow;
+  z-index: 1001;
+  width: 432px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.divider {
+  margin-bottom: 10px;
+  margin-top:10px;
+  border-bottom: 1px solid #e0e4eb;
+}

@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Polygon } from 'react-leaflet';
+import { Typography } from '@mui/material';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
+import ReportModal from '../ReportModal/ReportModal';
+import styles from './emptyZones.m.scss';
 
 const EmptyZones = () => {
     const dispatch = useDispatch();
     const emptyZones = useSelector(mapsSelectors.emptyZones);
     const filters = useSelector(mapsSelectors.filters);
     const analytics = useSelector(mapsSelectors.analytics);
+    const { polygon, isFetching } = emptyZones;
 
     useEffect(() => {
         if (analytics === 'empty') {
@@ -15,15 +19,36 @@ const EmptyZones = () => {
         }
     }, [filters, analytics]);
 
-    if (!Object.keys(emptyZones).length || analytics !== 'empty') {
+    if (analytics !== 'empty') {
         return null;
     }
 
     return (
-        <Polygon
-            pathOptions={{ fillOpacity: emptyZones.fillOpacity, color: 'green' }}
-            positions={emptyZones.polygon}
-        />
+        <>
+            {Boolean(Object.keys(polygon).length) && (
+                <Polygon
+                    pathOptions={{ fillOpacity: polygon.fillOpacity, color: 'green' }}
+                    positions={polygon.polygon}
+                />
+            )}
+            <ReportModal isFetching={isFetching}>
+                <>
+                    <Typography>
+                        <Typography component="span" className={styles.text}>
+                            Суммарная площадь пустых зон по выбранным фильтрам:
+                        </Typography>{' '}
+                        {emptyZones.area}
+                    </Typography>
+                    <br />
+                    <Typography>
+                        <Typography component="span" className={styles.text}>
+                            Насление пустых зон:
+                        </Typography>{' '}
+                        {emptyZones.population}
+                    </Typography>
+                </>
+            </ReportModal>
+        </>
     );
 };
 

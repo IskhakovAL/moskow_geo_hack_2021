@@ -21,6 +21,7 @@ export interface IProps {
     onNoText?: string;
     onBackdropClick?: TOnClick;
     disableBodyScroll?: boolean;
+    withBackDrop?: boolean;
     classes?: {
         root?: string;
         head?: string;
@@ -42,6 +43,7 @@ export default function Modal(props: IProps) {
         onClose = noop,
         onBackdropClick = onClose,
         disableBodyScroll = true,
+        withBackDrop = true,
         classes = {},
     } = props;
 
@@ -92,7 +94,10 @@ export default function Modal(props: IProps) {
 
     const modal = (
         <>
-            <div className={styles.backdrop} onClick={onBackdropClickCallback} />
+            <div
+                className={cn({ [styles.backdrop]: withBackDrop })}
+                onClick={onBackdropClickCallback}
+            />
             <div
                 className={cn(classes.root, { [styles.root]: !classes.root })}
                 onClick={onRootClickCallback}

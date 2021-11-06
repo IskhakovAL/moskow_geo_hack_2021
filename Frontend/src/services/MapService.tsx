@@ -6,6 +6,7 @@ import { IDict } from '../models/IDict';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
 import { IPlots } from '../models/IPlots';
 import { IRectangleInfo, RectangleParams } from '../models/IReactangleInfo';
+import { TEmptyZones } from '../models/IEmptyZones';
 
 export const fetchPositions = (params: IFilterParams) => {
     return Client.doRequest<IPositions>('locations', {
@@ -19,7 +20,7 @@ export const fetchMunicipalityInfo = () => {
 };
 
 export const fetchEmptyZones = (params: IFilterParams) => {
-    return Client.doRequest<IPolygonList>('emptyZones', {
+    return Client.doRequest<TEmptyZones>('emptyZones', {
         method: RequestMethod.POST,
         data: params,
     });
