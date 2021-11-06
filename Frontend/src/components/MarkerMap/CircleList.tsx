@@ -5,7 +5,7 @@ import { mapsSelectors } from '../../ducks/maps';
 
 const CircleList = () => {
     const hasCircles = useSelector(mapsSelectors.hasCircles);
-    const circles = useSelector(mapsSelectors.circles);
+    const markers = useSelector(mapsSelectors.markers);
 
     if (!hasCircles) {
         return null;
@@ -13,17 +13,17 @@ const CircleList = () => {
 
     return (
         <>
-            {circles.map((circle, idx) => {
-                const hasArea = circle.area !== 0;
+            {markers.map((marker, idx) => {
+                const hasArea = marker.area !== 0;
 
                 return (
                     <Circle
-                        center={circle.position as any}
-                        radius={circle.radius}
+                        center={marker.position as any}
+                        radius={marker.radius}
                         key={idx}
                         pathOptions={{
                             weight: 0,
-                            fillOpacity: hasArea ? circle.fillOpacity : 0.07,
+                            fillOpacity: hasArea ? marker.fillOpacity : 0.07,
                             fillColor: hasArea ? '#EC0E43' : '#110932',
                         }}
                     />

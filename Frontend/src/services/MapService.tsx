@@ -1,35 +1,32 @@
 import Client from '../client/Client';
 import { RequestMethod, ResponseType } from '../client/BaseHttpClient';
 import { IFilterParams } from '../models/IFilterParams';
-import { IPositions, TPolygon } from '../models/IPositions';
+import { IPolygonList, IPositions } from '../models/IPositions';
 import { IDict } from '../models/IDict';
-import AuthUtils from '../utils/AuthUtils';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
 import { IPlots } from '../models/IPlots';
 import { IRectangleInfo, RectangleParams } from '../models/IReactangleInfo';
 
 export const fetchPositions = (params: IFilterParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
-
-    return Client.doRequest<IPositions>(`locations/${login}`, {
+    return Client.doRequest<IPositions>('locations', {
         method: RequestMethod.POST,
         data: params,
     });
 };
 
-export const fetchEmptyZones = (params: IFilterParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
+export const fetchMunicipalityInfo = () => {
+    return Client.doRequest<IPolygonList>('municipalityInfo');
+};
 
-    return Client.doRequest<{ polygonList: TPolygon[] }>(`emptyZones/${login}`, {
+export const fetchEmptyZones = (params: IFilterParams) => {
+    return Client.doRequest<IPolygonList>('emptyZones', {
         method: RequestMethod.POST,
         data: params,
     });
 };
 
 export const fetchEmptyZonesFile = (params: IFilterParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
-
-    return Client.doRequest(`emptyZonesFile/${login}`, {
+    return Client.doRequest('emptyZonesFile', {
         method: RequestMethod.POST,
         data: params,
         responseType: ResponseType.BLOB,
@@ -37,18 +34,14 @@ export const fetchEmptyZonesFile = (params: IFilterParams) => {
 };
 
 export const fetchPointInfo = (data: PointParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
-
-    return Client.doRequest<IPointInfo>(`pointInfo/${login}`, {
+    return Client.doRequest<IPointInfo>('pointInfo', {
         method: RequestMethod.POST,
         data,
     });
 };
 
 export const fetchPointInfoFile = (data: PointParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
-
-    return Client.doRequest(`pointInfoFile/${login}`, {
+    return Client.doRequest('pointInfoFile', {
         method: RequestMethod.POST,
         data,
         responseType: ResponseType.BLOB,
@@ -56,18 +49,14 @@ export const fetchPointInfoFile = (data: PointParams) => {
 };
 
 export const fetchRectangleInfo = (data: PointParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
-
-    return Client.doRequest<IRectangleInfo>(`rectangleInfo/${login}`, {
+    return Client.doRequest<IRectangleInfo>('rectangleInfo', {
         method: RequestMethod.POST,
         data,
     });
 };
 
 export const fetchRectangleFile = (data: RectangleParams) => {
-    const { login } = AuthUtils.getAuthMetadata();
-
-    return Client.doRequest(`rectangleInfoFile/${login}`, {
+    return Client.doRequest('rectangleInfoFile', {
         method: RequestMethod.POST,
         data,
         responseType: ResponseType.BLOB,
