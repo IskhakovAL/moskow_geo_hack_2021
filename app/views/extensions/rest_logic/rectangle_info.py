@@ -1,10 +1,13 @@
 from ..sql_helper import SQLHelper
 from shapely import wkb
+from shapely.geometry import Polygon
+from .filtering import filtering_objects
 
 
 def generate_rectangle_information(form):
     sh = SQLHelper()
     rectangle_coord = form.pop('rectangleCoord')
+    filters = filtering_objects(form)
     x1 = rectangle_coord[0]
     y1 = rectangle_coord[1]
     x2 = rectangle_coord[2]
@@ -57,18 +60,20 @@ def generate_rectangle_information(form):
         latitude,
         ST_MakeEnvelope({x1}, {y1}, {x2}, {y2}, 4326) as geometry
       from "Objects" o
+      {filter}
     ) as t
     where flag is true
     group by grouped
     """.format(
-        x1=x1, y1=y1, x2=x2, y2=y2
+        x1=x1, y1=y1, x2=x2, y2=y2,
+        filter='' if not filters else 'where {}'.format(filters)
     )
     sql_result = sh.execute(sql_text)
 
-    cnt = None
-    total_area_of_sports_zones = None
-    types_of_sports_zones = None
-    types_of_sports_services = None
+    cnt = 0
+    total_area_of_sports_zones = 0
+    types_of_sports_zones = ''
+    types_of_sports_services = ''
     geometry = None
 
     for row in sql_result:
@@ -77,7 +82,10 @@ def generate_rectangle_information(form):
         types_of_sports_zones = row['zones_type_agg']
         types_of_sports_services = row['sport_type_agg']
         geometry = row['geometry']
-    geometry = wkb.loads(geometry, hex=True)
+    if not geometry:
+        geometry = Polygon()
+    else:
+        geometry = wkb.loads(geometry, hex=True)
 
     cnt = round(cnt * 100000 / people_st_area, 2)
     total_area_of_sports_zones = round(total_area_of_sports_zones * 100000 / people_st_area, 2)

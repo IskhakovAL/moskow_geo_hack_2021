@@ -1,9 +1,12 @@
 from ..sql_helper import SQLHelper
 from shapely import wkb
+from shapely.geometry import MultiPolygon
+from .filtering import filtering_objects
 
 
 def generate_empty_zones(form):
     sh = SQLHelper()
+    filters = filtering_objects(form)
 
     sql_text = """
         select 
@@ -22,22 +25,27 @@ def generate_empty_zones(form):
               ST_Union(geometry) as geometry_y,
               'id' as id
             from "Objects" o2
-            limit 1
+            {filter}
           ) as y
           on x.id = y.id
         ) as z
-        """
+        """.format(
+        filter='' if not filters else 'where {}'.format(filters)
+    )
 
     sql_result = sh.execute(sql_text)
 
-    area = None
+    area = 0
     difference = None
 
     for row in sql_result:
         area = row['area']
         difference = row['diff']
 
-    difference = wkb.loads(difference, hex=True)
+    if not difference:
+        difference = MultiPolygon()
+    else:
+        difference = wkb.loads(difference, hex=True)
 
     result = {
         'geometry': difference,

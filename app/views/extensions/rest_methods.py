@@ -1,12 +1,11 @@
 from .rest_logic import zip_shape, generate_point_information, generate_empty_zones, \
-    generate_rectangle_information
+    generate_rectangle_information, filtering_objects
 
 from .sql_helper import SQLHelper
 
 from shapely import wkb
 
 import numpy as np
-
 
 sh = SQLHelper()
 
@@ -38,6 +37,8 @@ def get_catalog():
 
 
 def get_locations(form):
+    filters = filtering_objects(form)
+
     sql_text = '''
         select
         object_name, 
@@ -52,8 +53,10 @@ def get_locations(form):
         latitude, 
         longitude
         from "Objects" o
+        {filter}
         group by object_name, organization_name, availability_name, latitude, longitude
-    '''
+    '''.format(filter='' if not filters else 'where {}'.format(filters))
+
     sql_result = sh.execute(sql_text)
 
     popups = []
@@ -154,10 +157,23 @@ def get_point_information(form):
         polygon_coords = list(geometry.exterior.coords)
         polygon_coords = [[x[1], x[0]] for x in polygon_coords]
 
+    zones_type = point_info['typeZones']
+    services_type = point_info['typeServs']
+
+    if not zones_type:
+        zones_type = []
+    else:
+        zones_type = zones_type.split(', ')
+
+    if not services_type:
+        services_type = []
+    else:
+        services_type = services_type.split(', ')
+
     resp = {
         'totalAreaOfSportsZones': point_info['totalArea'],
-        'typesOfSportsZones': point_info['typeZones'].split(', '),
-        'typesOfSportsServices': point_info['typeServs'].split(', '),
+        'typesOfSportsZones': zones_type,
+        'typesOfSportsServices': services_type,
         'polygonList': polygon_coords
     }
     return resp
@@ -187,10 +203,23 @@ def get_rectangle_information(form):
         polygon_coords = list(geometry.exterior.coords)
         polygon_coords = [[x[1], x[0]] for x in polygon_coords]
 
+    zones_type = rectangle_information['typeZones']
+    services_type = rectangle_information['typeServs']
+
+    if not zones_type:
+        zones_type = []
+    else:
+        zones_type = zones_type.split(', ')
+
+    if not services_type:
+        services_type = []
+    else:
+        services_type = services_type.split(', ')
+
     resp = {
         'averageAreaOfSportsZones': rectangle_information['avrgArea'],
-        'typesOfSportsZones': rectangle_information['typeZones'].split(', '),
-        'typesOfSportsServices': rectangle_information['typeServs'].split(', '),
+        'typesOfSportsZones': zones_type,
+        'typesOfSportsServices': services_type,
         'count': rectangle_information['count'],
         'polygonList': polygon_coords
     }
