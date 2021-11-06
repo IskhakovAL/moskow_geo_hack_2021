@@ -5,6 +5,11 @@ from .filtering import filtering_objects
 
 
 def generate_empty_zones(form):
+    """
+    Функция для генерации информации о пустых зонах
+    :param form: форма из POST запроса с 6 основными фильтрами
+    :return: dict с преобразованной информацией
+    """
     sh = SQLHelper()
     filters = filtering_objects(form)
 

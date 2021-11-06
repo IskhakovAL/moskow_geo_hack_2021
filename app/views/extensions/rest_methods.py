@@ -11,6 +11,11 @@ sh = SQLHelper()
 
 
 def get_catalog():
+    """
+    Метод формирования json с каталогом, то есть с id фильтров
+    Подрробнее о фильтрах в ../rest_logic/filtering.py
+    :return: json с фильтрами
+    """
     resp = {
         'sportsFacility': [],
         'departmentalAffiliation': [],
@@ -37,6 +42,11 @@ def get_catalog():
 
 
 def get_locations(form):
+    """
+    Функция для формирования json с точками и информацией о них
+    :param form: форма из POST запроса с 6 основными фильтрами
+    :return: json с точками и информацией о них
+    """
     filters = filtering_objects(form)
 
     sql_text = '''
@@ -97,6 +107,11 @@ def get_locations(form):
 
 
 def get_municipality_info():
+    """
+    Функция для формирования json с полигонами и информацией о них для отрисовки слоя
+    плотности населения Москвы
+    :return: son с полигонами и необходимой информацией
+    """
     sql_text = """
     select municipality, people, opacity, geometry 
     from "Moscow" m
@@ -149,6 +164,11 @@ def get_municipality_info():
 
 
 def get_point_information(form):
+    """
+    Функция для формирования json с полигоном для отрисовки аналитики по точке
+    :param form: форма из POST запроса с координатами точки и 6 основными фильтрами
+    :return: json с полигоном с необходимой информацией
+    """
     point_info = generate_point_information(form)
     geometry = point_info['geometry']
 
@@ -180,6 +200,11 @@ def get_point_information(form):
 
 
 def get_point_shape_archive(form):
+    """
+    Функция для формирования архива на основании полигоа для отрисовки аналитики по точке
+    :param form: форма из POST запроса с координатами точки и 6 основными фильтрами
+    :return: BytesIO объект с архивом
+    """
     point_info = generate_point_information(form)
 
     schema = {
@@ -195,6 +220,11 @@ def get_point_shape_archive(form):
 
 
 def get_rectangle_information(form):
+    """
+    Функция для формирования json с полигоном для отрисовки аналитики по области
+    :param form: форма из POST запроса с координатами области (прямоугольника) и 6 основными фильтрами
+    :return: json с полигоном и необходимой информацией
+    """
     rectangle_information = generate_rectangle_information(form)
     geometry = rectangle_information['geometry']
 
@@ -228,6 +258,11 @@ def get_rectangle_information(form):
 
 
 def get_rectangle_shape_archive(form):
+    """
+    Функция для формирования архива на основании полигона для отрисовки аналитики по области
+    :param form: форма из POST запроса с координатами области (прямоугольника) и 6 основными фильтрами
+    :return: BytesIO объект с архивом
+    """
     rectangle_information = generate_rectangle_information(form)
 
     schema = {
@@ -244,6 +279,11 @@ def get_rectangle_shape_archive(form):
 
 
 def get_empty_zones(form):
+    """
+    Функция для формирования json с мультиполигоном с аналитикой по пустым зонам
+    :param form: форма из POST запроса с 6 основными фильтрами
+    :return: json с мультиполигоном с необходимой информацией
+    """
     empty_zones = generate_empty_zones(form)
 
     resp = {
@@ -271,6 +311,11 @@ def get_empty_zones(form):
 
 
 def get_empty_zones_archive(form):
+    """
+    Функция для формирования архива на основании полигона с инфомрацией о пустых зонах
+    :param form: форма из POST запроса с 6 основными фильтрами
+    :return: BytesIO объект с архивом
+    """
     empty_zones = generate_empty_zones(form)
 
     schema = {

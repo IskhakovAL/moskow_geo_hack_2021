@@ -5,6 +5,11 @@ from .filtering import filtering_objects
 
 
 def generate_point_information(form):
+    """
+    Функция для генерации информации по точке
+    :param form: форма из POST запроса с координатами точки и 6 основными фильтрами
+    :return: dict с преобразованной информацией
+    """
     sh = SQLHelper()
     point_coord = form.pop('pointCoord')
     filters = filtering_objects(form)

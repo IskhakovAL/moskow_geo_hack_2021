@@ -5,6 +5,11 @@ from .filtering import filtering_objects
 
 
 def generate_rectangle_information(form):
+    """
+    Функция для генерации информации по области
+    :param form: форма из POST запроса с координатами области (прямоугольника) и 6 основными фильтрами
+    :return: dict с преобразованной информацией
+    """
     sh = SQLHelper()
     rectangle_coord = form.pop('rectangleCoord')
     filters = filtering_objects(form)
@@ -99,5 +104,3 @@ def generate_rectangle_information(form):
     }
 
     return result
-
-

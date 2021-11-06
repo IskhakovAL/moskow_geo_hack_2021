@@ -3,6 +3,11 @@ from flask import Flask
 
 
 def create_main_app(app_config=None):
+    """
+    Функция для создания объекта приложения
+    :param app_config: конфиг для запуска приложения
+    :return: объект созданного приложения
+    """
     if app_config is None:
         return None
 
