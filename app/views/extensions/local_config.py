@@ -1,21 +1,14 @@
-import redis
 import os
-from pyproj import CRS
+# from pyproj import CRS
+from sqlalchemy import create_engine
+
+# CRS_4326 = CRS('EPSG:4326')
+# CRS_3857 = CRS('EPSG:3857')
+
+SERVER_ADDRESS = '62.84.123.182'
 
 if os.name == 'posix':
-    REDIS_CONNECTION = redis.Redis(host='redis', port=6379, db=0)
+    SQL_ENGINE = create_engine("postgresql://dbuser:qwerty12345@db:5432/db", pool_recycle=3600)
 else:
-    REDIS_CONNECTION = redis.Redis(host='localhost', port=6379, db=0)
-
-CRS_4326 = CRS('EPSG:4326')
-CRS_3857 = CRS('EPSG:3857')
-
-MAIN_DATASET = 'main0'
-GPD_DATASET = 'main1'
-CATALOG_DICT = 'catalog'
-MOSCOW_POLYGONS_DATASET = 'moscow_polygon'
-PLOTS_ARRAY = 'plots'
-
-USER_MAIN_DATASET = '{}:0'
-USER_GPD_DATASET = '{}:1'
-USER_LAST_FILTERS_DICT = '{}:f'
+    SQL_ENGINE = create_engine("postgresql://dbuser:qwerty12345@{}:5432/db".format(SERVER_ADDRESS)
+                               , pool_recycle=3600)

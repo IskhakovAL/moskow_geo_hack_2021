@@ -2,13 +2,19 @@ from os import path, listdir
 from zipfile import ZipFile
 from tempfile import TemporaryDirectory
 from io import BytesIO
+import fiona
+from shapely.geometry import mapping
 
 
-def zip_shape(df):
+def zip_shape(schema, data):
     archive = BytesIO()
     with TemporaryDirectory() as tmp_dir:
         shape_file = path.join(tmp_dir, 'result.shp')
-        df.to_file(shape_file, driver='ESRI Shapefile')
+        with fiona.open(shape_file, 'w', 'ESRI Shapefile', schema, encoding='utf-8') as c:
+            c.write({
+                'geometry': mapping(data.pop('geometry')),
+                'properties': data
+            })
 
         with ZipFile(archive, 'w') as zip_archive:
 

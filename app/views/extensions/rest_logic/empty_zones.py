@@ -1,24 +1,48 @@
-import geopandas as gpd
-from shapely.geometry import shape
-from ..redis_helper import RedisHelper
-from shapely.ops import cascaded_union
-from .filtering import filtering_gpd_objects
-
-from ..local_config import USER_GPD_DATASET, CRS_3857, CRS_4326, MOSCOW_POLYGONS_DATASET
+from ..sql_helper import SQLHelper
+from shapely import wkb
 
 
-def generate_empty_zones(form, uid):
-    rh = RedisHelper()
-    moscow_polygon = rh.get(MOSCOW_POLYGONS_DATASET)
-    moscow_polygon['geometry'] = moscow_polygon['geometry'].apply(
-        lambda row: shape(row))
-    moscow_polygon = gpd.GeoDataFrame(moscow_polygon, crs=CRS_4326)
+def generate_empty_zones(form):
+    sh = SQLHelper()
 
-    filtering_gpd_objects(form, uid)
-    merged_objects_gdf = rh.get(USER_GPD_DATASET.format(uid))
-    merged_objects_gdf['geometry'] = merged_objects_gdf['geometry'].apply(lambda row: shape(row))
-    merged_objects_gdf = gpd.GeoDataFrame(merged_objects_gdf, crs=CRS_3857)
-    merged_objects_gdf = merged_objects_gdf.to_crs(CRS_4326)
-    difference_df = gpd.overlay(moscow_polygon, merged_objects_gdf, how='difference')
+    sql_text = """
+        select 
+          ROUND(ST_Area(ST_Transform(diff, 26986)) / 1000000) as area, 
+          diff
+        from (
+          select ST_Difference(geometry_x, geometry_y) as diff
+          from (
+            select 
+              ST_Union(geometry) as geometry_x,
+              'id' as id
+            from "Moscow" m
+          ) as x
+          inner join (
+            select 
+              ST_Union(geometry) as geometry_y,
+              'id' as id
+            from "Objects" o2
+            limit 1
+          ) as y
+          on x.id = y.id
+        ) as z
+        """
 
-    return difference_df
+    sql_result = sh.execute(sql_text)
+
+    area = None
+    difference = None
+
+    for row in sql_result:
+        area = row['area']
+        difference = row['diff']
+
+    difference = wkb.loads(difference, hex=True)
+
+    result = {
+        'geometry': difference,
+        'area': area,
+        'population': round(area / 2720 * 12655050)
+    }
+
+    return result

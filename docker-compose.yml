@@ -28,7 +28,7 @@ services:
       - 8080
     depends_on:
       - front
-      - redis
+      - db
 
   front:
     build:
@@ -39,9 +39,16 @@ services:
     expose:
       - 8082
 
-  redis:
-    image: redis:6.2.6-alpine
-    container_name: redis
+  db:
+    image: postgis/postgis
+    container_name: db
     restart: unless-stopped
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=qwerty12345
+      - POSTGRES_DB=db
     ports:
-      - 6379
+      - "5432:5432"
+

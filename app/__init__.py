@@ -1,8 +1,6 @@
 from .views import node
 from flask import Flask
 
-from app.views.extensions import preprocessing
-
 
 def create_main_app(app_config=None):
     if app_config is None:
@@ -12,7 +10,6 @@ def create_main_app(app_config=None):
     app.config.from_object(app_config)
 
     app.register_blueprint(node)
-    preprocessing()
 
     return app
 

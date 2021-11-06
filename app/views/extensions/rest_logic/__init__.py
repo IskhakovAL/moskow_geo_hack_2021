@@ -1,5 +1,5 @@
-from .filtering import filtering_main_objects, filtering_gpd_objects
-from .polygons_intersections import generate_polygons_intersections
+# from .filtering import filtering_main_objects, filtering_gpd_objects
+from .point_info import generate_point_information
 from .empty_zones import generate_empty_zones
 from .shape_zipper import zip_shape
-from .objects_intersection import generate_objects_intersections
+from .rectangle_info import generate_rectangle_information
