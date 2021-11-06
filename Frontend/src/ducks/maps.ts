@@ -1,5 +1,12 @@
 import { createActionCreator, createReducer } from 'deox';
-import { Coordinate, IPositions, MarkerType, TCircle, TPolygon } from '../models/IPositions';
+import {
+    Coordinate,
+    IPolygonList,
+    IPositions,
+    MarkerType,
+    TCircle,
+    TPolygon,
+} from '../models/IPositions';
 import * as MapService from '../services/MapService';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
 import IStore from '../models/IStore';
@@ -50,6 +57,27 @@ const fetchPosition = (params: IFilterParams) => async (dispatch) => {
         dispatch(fetchPositionsSuccess(response));
     } catch (err) {
         dispatch(fetchPositionsError(err));
+    }
+};
+
+const fetchMunicipalityInfoStart = createActionCreator('maps/fetchMunicipalityInfoStart [..]');
+const fetchMunicipalityInfoSuccess = createActionCreator(
+    'maps/fetchMunicipalityInfoSuccess [success]',
+    (resolve) => (payload: IPolygonList) => resolve(payload),
+);
+const fetchMunicipalityInfoError = createActionCreator(
+    'maps/fetchMunicipalityInfoError [error]',
+    (resolve) => (err: Error) => resolve(err.message),
+);
+
+const fetchMunicipalityInfo = () => async (dispatch) => {
+    dispatch(fetchMunicipalityInfoStart());
+    try {
+        const response = await MapService.fetchMunicipalityInfo();
+
+        dispatch(fetchMunicipalityInfoSuccess(response));
+    } catch (err) {
+        dispatch(fetchMunicipalityInfoError(err));
     }
 };
 
@@ -170,6 +198,7 @@ export const mapsActions = {
     switchPolygons,
     saveFilters,
     changeAnalytics,
+    fetchMunicipalityInfo,
     fetchPosition,
     fetchPointInfo,
     fetchRectangleInfo,
@@ -244,8 +273,6 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             markers: payload.markers,
-            circles: payload.circles,
-            polygons: payload.polygonList,
             isFetching: false,
         };
     }),
@@ -253,6 +280,12 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             isFetching: false,
+        };
+    }),
+    handleAction(fetchMunicipalityInfoSuccess, (state, { payload }) => {
+        return {
+            ...state,
+            polygons: payload.polygonList,
         };
     }),
     handleAction(fetchPointInfoSuccess, (state, { payload }) => {

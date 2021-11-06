@@ -1,5 +1,6 @@
-import { Polygon } from 'react-leaflet';
+import { Polygon, Tooltip } from 'react-leaflet';
 import React from 'react';
+import { Typography } from '@mui/material';
 import { TPolygon } from '../../models/IPositions';
 
 interface IProps {
@@ -14,7 +15,16 @@ const PolygonList = ({ polygons }: IProps) => {
                     key={idx}
                     pathOptions={{ fillOpacity: polygon.fillOpacity, color: '#EC0E43' }}
                     positions={polygon.polygon}
-                />
+                >
+                    <Tooltip>
+                        <>
+                            <Typography>
+                                Наименование района: {polygon.popup.municipality}
+                            </Typography>
+                            <Typography>Население: {polygon.popup.people}</Typography>
+                        </>
+                    </Tooltip>
+                </Polygon>
             ))}
         </>
     );
