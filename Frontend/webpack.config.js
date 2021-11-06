@@ -93,7 +93,7 @@ const jsLoaders = (...presets) => {
     ];
 
     if (isDevelopment) {
-        loaders.push('eslint-loader');
+        // loaders.push('eslint-loader');
     }
 
     return loaders;

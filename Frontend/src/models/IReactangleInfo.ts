@@ -2,9 +2,10 @@ import { TPolygon } from './IPositions';
 import { IFilterParams } from './IFilterParams';
 
 export interface IRectangleInfo {
-    areaOfSportZones: number;
-    numberOfSportZones: number;
-    typesOfSportServices: number;
+    averageAreaOfSportsZones: number;
+    count: number;
+    typesOfSportsZones: string[];
+    typesOfSportsServices: string[];
     polygonList: TPolygon[];
 }
 

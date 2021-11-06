@@ -1,7 +1,10 @@
 import { useSelector } from 'react-redux';
-import { Polygon, Popup } from 'react-leaflet';
+import { Polygon } from 'react-leaflet';
 import React from 'react';
+import { Typography } from '@mui/material';
 import { mapsSelectors } from '../../ducks/maps';
+import ReportModal from '../ReportModal/ReportModal';
+import styles from './rectanglePolygon.m.scss';
 
 const RectanglePolygon = () => {
     const rectangleInfo = useSelector(mapsSelectors.rectangleInfo);
@@ -11,17 +14,43 @@ const RectanglePolygon = () => {
         return null;
     }
 
+    const renderList = (item, idx) => (
+        <Typography component="p" key={idx}>
+            {item}
+        </Typography>
+    );
+
     return (
         <>
-            <Polygon pathOptions={{ color: 'blue' }} positions={rectangleInfo.polygonList as any}>
-                <Popup>
-                    <>
-                        <p>Площадь спортивных зон: {rectangleInfo.areaOfSportZones}</p>
-                        <p>Виды спортивных услуг: {rectangleInfo.typesOfSportServices}</p>
-                        <p>Количество спортивных зон: {rectangleInfo.numberOfSportZones}</p>
-                    </>
-                </Popup>
-            </Polygon>
+            <Polygon pathOptions={{ color: 'blue' }} positions={rectangleInfo.polygonList as any} />
+            <ReportModal>
+                <>
+                    <Typography>
+                        <Typography component="span" className={styles.text}>
+                            Суммарная площадь спортивных зон (на 100 тыс.):
+                        </Typography>{' '}
+                        <br />
+                        {rectangleInfo.averageAreaOfSportsZones}
+                    </Typography>
+                    <Typography>
+                        <Typography component="span" className={styles.text}>
+                            Спортивные зоны (на 100 тыс.)
+                        </Typography>
+                        <Typography component="div" className={styles.typographyDiv}>
+                            {rectangleInfo.typesOfSportsZones.map(renderList)}
+                        </Typography>
+                    </Typography>
+                    <br />
+                    <Typography>
+                        <Typography component="p" className={styles.text}>
+                            Спортивные услуги (на 100 тыс.):
+                        </Typography>{' '}
+                        <Typography component="div" className={styles.typographyDiv}>
+                            {rectangleInfo.typesOfSportsServices.map(renderList)}
+                        </Typography>
+                    </Typography>
+                </>
+            </ReportModal>
         </>
     );
 };

@@ -12,7 +12,7 @@ export default function Header() {
                 activeClassName={styles.activeLink}
                 to={Routes.MARKERS}
             >
-                <Typography>Главная</Typography>
+                <Typography>ГЛАВНАЯ</Typography>
             </NavLink>
             <NavLink
                 className={styles.link}
