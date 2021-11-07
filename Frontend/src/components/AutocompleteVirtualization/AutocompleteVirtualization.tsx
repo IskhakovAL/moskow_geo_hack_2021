@@ -146,7 +146,11 @@ export default function AutocompleteVirtualization({ options, label, name }) {
             ListboxComponent={ListboxComponent}
             options={options}
             getOptionLabel={(option: DictItem) => option.name}
-            renderInput={(params) => <TextField {...params} label={label} variant="standard" />}
+            renderInput={(params) => (
+                <div style={{ maxHeight: '300px', overflowY: 'auto', overflowX: 'hidden' }}>
+                    <TextField {...params} label={label} variant="standard" />
+                </div>
+            )}
             renderOption={(props, option) => [props, option]}
             renderGroup={(params) => params}
         />

@@ -12,3 +12,8 @@ body {
   min-height: 100vh;
   position: relative;
 }
+
+.leaflet-control-zoom {
+  margin-left: 350px !important;
+  margin-top: 15px !important;
+}

@@ -33,14 +33,13 @@ const EmptyZones = () => {
             )}
             <ReportModal isFetching={isFetching}>
                 <>
-                    <Typography>
+                    <Typography className={styles.mb5}>
                         <Typography component="span" className={styles.text}>
                             Суммарная площадь пустых зон по выбранным фильтрам:
                         </Typography>{' '}
-                        {emptyZones.area}
+                        {emptyZones.area} км²
                     </Typography>
-                    <br />
-                    <Typography>
+                    <Typography className={styles.mb5}>
                         <Typography component="span" className={styles.text}>
                             Насление пустых зон:
                         </Typography>{' '}

@@ -16,8 +16,8 @@ const PointPolygon = () => {
     }
 
     const renderList = (item, idx) => (
-        <Typography component="p" key={idx}>
-            {item}
+        <Typography component="p" key={idx} className={styles.item}>
+            ● {item}
         </Typography>
     );
 
@@ -26,28 +26,27 @@ const PointPolygon = () => {
             <Polygon pathOptions={{ color: 'blue' }} positions={pointInfo.polygonList as any} />
             <ReportModal isFetching={isFetching}>
                 <>
+                    <Typography className={styles.mb5}>
+                        <Typography component="span" className={styles.text}>
+                            Суммарная площадь объектов:
+                        </Typography>{' '}
+                        {Math.round(pointInfo.totalAreaOfSportsZones)} м²
+                    </Typography>
                     <Typography>
                         <Typography component="span" className={styles.text}>
-                            Спортивные зоны:
+                            Типы спортивных зон:
                         </Typography>
                         <Typography component="div" className={styles.typographyDiv}>
                             {pointInfo.typesOfSportsZones.map(renderList)}
                         </Typography>
                     </Typography>
-                    <br />
                     <Typography>
                         <Typography component="p" className={styles.text}>
-                            Спортивные объекты:
+                            Типы спортивных услуг:
                         </Typography>{' '}
                         <Typography component="div" className={styles.typographyDiv}>
                             {pointInfo.typesOfSportsServices.map(renderList)}
                         </Typography>
-                    </Typography>
-                    <Typography>
-                        <Typography component="span" className={styles.text}>
-                            Площадь объектов:
-                        </Typography>{' '}
-                        {pointInfo.totalAreaOfSportsZones}
                     </Typography>
                 </>
             </ReportModal>

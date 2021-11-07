@@ -1,5 +1,16 @@
 import React, { useMemo } from 'react';
-import { Button, FormControl, FormControlLabel, Radio, RadioGroup, Switch } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    Radio,
+    RadioGroup,
+    Switch,
+    Tooltip,
+    Typography,
+} from '@mui/material';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './analyticsModal.m.scss';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
@@ -41,8 +52,9 @@ const AnalyticsModal = () => {
     };
     const handleSwitch = (e) => {
         removePrevCursorStyle();
-        addCursorStyle('dot');
-
+        if (e.target.checked) {
+            addCursorStyle('dot');
+        }
         if (!e.target.checked) {
             dispatch(mapsActions.changeAnalytics(''));
         }
@@ -105,14 +117,34 @@ const AnalyticsModal = () => {
                     onChange={handleChangeAnalytics}
                 >
                     <FormControlLabel
+                        className={styles.formControlLabel}
                         value="dot"
                         control={<Radio checked={isDotAnalytics} />}
-                        label="Аналитика по точке"
+                        label={
+                            <Typography className={styles.label}>
+                                Аналитика по точке{' '}
+                                <Tooltip title="что-нибудь">
+                                    <IconButton>
+                                        <HelpOutlineIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Typography>
+                        }
                     />
                     <FormControlLabel
+                        className={styles.formControlLabel}
                         value="area"
                         control={<Radio checked={isAreaAnalytics} />}
-                        label="Аналитика по области"
+                        label={
+                            <Typography className={styles.label}>
+                                Аналитика по области{' '}
+                                <Tooltip title="что-нибудь">
+                                    <IconButton>
+                                        <HelpOutlineIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Typography>
+                        }
                     />
                     <FormControlLabel
                         value="empty"
