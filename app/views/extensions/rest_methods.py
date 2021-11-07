@@ -1,5 +1,5 @@
 from .rest_logic import zip_shape, generate_point_information, generate_empty_zones, \
-    generate_rectangle_information, filtering_objects
+    generate_rectangle_information, filtering_objects, generate_plots
 
 from .sql_helper import SQLHelper
 
@@ -329,9 +329,38 @@ def get_empty_zones_archive(form):
     return zip_shape(schema, empty_zones)
 
 
-# def get_plots():
-#     plots = rh.get(PLOTS_ARRAY, False)
-#     resp = {
-#         'plots': plots
-#     }
-#     return resp
+def get_plots():
+    """
+    Функция для формирования json с plotly графиками с аналитикой
+    :return: json с plotly графиками
+    """
+    plots = generate_plots()
+    resp = {
+        'plots': plots
+    }
+    return resp
+
+
+def get_recommendations_ml():
+    """
+    Функция для формирования json с полигоном, полученным из обученной модели.
+    Модель выделяет область для потенциального построения в ней спортивных объектов.
+
+    Более подробно о процессе получения данного полигона и использовании алгоритма
+    машинного обучения можно почитать в app/machine_learning/model.html
+    :return: json с полигоном
+    """
+    polygon_coors = [[37.77584367360977, 55.82419119278246],
+                     [37.771153696940615, 55.75866678332274],
+                     [37.77167853487262, 55.747304123203],
+                     [37.781524, 55.70071],
+                     [37.819657, 55.678397],
+                     [37.923649500204725, 55.68550829104208],
+                     [37.92945073149109, 55.70393151351982],
+                     [37.86654062425652, 55.81964092471844],
+                     [37.776788587438, 55.824349404759]]
+    resp = {
+        'polygonList': polygon_coors
+    }
+
+    return resp

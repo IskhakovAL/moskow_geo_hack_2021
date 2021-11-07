@@ -3,7 +3,7 @@ from flask import Blueprint, request, send_file
 from .extensions import get_locations, get_point_information,\
     get_municipality_info, get_empty_zones, get_point_shape_archive, \
     get_empty_zones_archive, get_catalog, get_rectangle_information, \
-    get_rectangle_shape_archive
+    get_rectangle_shape_archive, get_plots, get_recommendations_ml
 
 node = Blueprint('node', __name__)
 
@@ -105,6 +105,23 @@ def api_rectangle_file():
     )
 
 
-# @node.route('/api/plots', methods=['GET'])
-# def api_plots():
-#     return get_plots()
+@node.route('/api/plots', methods=['GET'])
+def api_plots():
+    """
+    route для дашборда
+    :return: json с plotly графиками с аналитикой
+    """
+    return get_plots()
+
+
+@node.route('/api/recommendsMlSystem', methods=['GET'])
+def api_recommends_ml_system():
+    """
+    route для получения полигона, полученного из обученной модели.
+    Модель выделяет область для потенциального построения в ней спортивных объектов.
+
+    Более подробно о процессе получения данного полигона и использовании алгоритма
+    машинного обучения можно почитать в app/machine_learning/model.html
+    :return: json с полигоном
+    """
+    return get_recommendations_ml()
