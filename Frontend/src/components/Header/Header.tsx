@@ -1,4 +1,5 @@
 import React from 'react';
+import cn from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import styles from './header.m.scss';
@@ -15,11 +16,11 @@ export default function Header() {
                 <Typography>ГЛАВНАЯ</Typography>
             </NavLink>
             <NavLink
-                className={styles.link}
+                className={cn(styles.link, styles.ml30)}
                 activeClassName={styles.activeLink}
                 to={Routes.DASHBORDS}
             >
-                <Typography>ДАШБОРДЫ</Typography>
+                <Typography>СТАТИСТИКА</Typography>
             </NavLink>
         </div>
     );

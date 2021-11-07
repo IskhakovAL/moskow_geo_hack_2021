@@ -5,7 +5,7 @@ import Dashbords from '../Dashbords/Dashbords';
 
 export const Routes = {
     MARKERS: '/sports-object',
-    DASHBORDS: '/dashbords',
+    DASHBORDS: '/statistics',
 };
 
 export default function Router() {

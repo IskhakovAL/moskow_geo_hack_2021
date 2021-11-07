@@ -15,8 +15,8 @@ const RectanglePolygon = () => {
     }
 
     const renderList = (item, idx) => (
-        <Typography component="p" key={idx}>
-            {item}
+        <Typography component="p" key={idx} className={styles.item}>
+            ● {item}
         </Typography>
     );
 
@@ -25,22 +25,20 @@ const RectanglePolygon = () => {
             <Polygon pathOptions={{ color: 'blue' }} positions={rectangleInfo.polygonList as any} />
             <ReportModal>
                 <>
-                    <Typography>
+                    <Typography className={styles.mb5}>
                         <Typography component="span" className={styles.text}>
                             Суммарная площадь спортивных зон (на 100 тыс.):
                         </Typography>{' '}
-                        <br />
-                        {rectangleInfo.averageAreaOfSportsZones}
+                        {rectangleInfo.averageAreaOfSportsZones} км²
                     </Typography>
                     <Typography>
                         <Typography component="span" className={styles.text}>
-                            Спортивные зоны (на 100 тыс.)
+                            Спортивные зоны (на 100 тыс.):
                         </Typography>
                         <Typography component="div" className={styles.typographyDiv}>
                             {rectangleInfo.typesOfSportsZones.map(renderList)}
                         </Typography>
                     </Typography>
-                    <br />
                     <Typography>
                         <Typography component="p" className={styles.text}>
                             Спортивные услуги (на 100 тыс.):

@@ -22,40 +22,39 @@ const MarkerList = () => {
                         <Popup>
                             <Typography>
                                 <Typography component="span" className={styles.text}>
-                                    доступность:{' '}
+                                    Доступность:{' '}
                                 </Typography>
                                 {marker.popup.availabilityName}
                             </Typography>
                             <Typography>
                                 <Typography component="span" className={styles.text}>
-                                    наименование спортивного объекта:{' '}
+                                    Наименование спортивного объекта:{' '}
                                 </Typography>
                                 {marker.popup.objectName}
                             </Typography>
                             <Typography>
                                 <Typography component="span" className={styles.text}>
-                                    перечень спортивных зон:{' '}
-                                </Typography>
-                                {marker.popup.organizationName}
-                            </Typography>
-                            <Typography>
-                                <Typography component="span" className={styles.text}>
-                                    тип спортивных зон (крытые спортивные зоны, открытые спортивные
-                                    зоны, бассейны):{' '}
-                                </Typography>
-                                {marker.popup.sportType}
-                            </Typography>
-                            <Typography>
-                                <Typography component="span" className={styles.text}>
-                                    ведомственная принадлежность:{' '}
+                                    Перечень спортивных зон:{' '}
                                 </Typography>
                                 {marker.popup.zonesName}
                             </Typography>
                             <Typography>
                                 <Typography component="span" className={styles.text}>
-                                    вид спортивных услуг:{' '}
+                                    Типы спортивных зон:{' '}
                                 </Typography>
                                 {marker.popup.zonesType}
+                            </Typography>
+                            <Typography>
+                                <Typography component="span" className={styles.text}>
+                                    Ведомственная принадлежность:{' '}
+                                </Typography>
+                                {marker.popup.organizationName}
+                            </Typography>
+                            <Typography>
+                                <Typography component="span" className={styles.text}>
+                                    Виды спортивных услуг:{' '}
+                                </Typography>
+                                {marker.popup.sportType}
                             </Typography>
                         </Popup>
                     </Marker>
