@@ -27,7 +27,7 @@ const EmptyZones = () => {
         <>
             {Boolean(Object.keys(polygon).length) && (
                 <Polygon
-                    pathOptions={{ fillOpacity: polygon.fillOpacity, color: 'green' }}
+                    pathOptions={{ fillOpacity: polygon.fillOpacity, color: '#d5adfb' }}
                     positions={polygon.polygon}
                 />
             )}
