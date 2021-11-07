@@ -24,8 +24,9 @@ export interface IPositions {
     markers: MarkerType[];
 }
 
+export type TLat = LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][];
 export type TPolygon = {
-    polygon: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][];
+    polygon: TLat;
     fillOpacity: number;
     popup: {
         municipality: string;
