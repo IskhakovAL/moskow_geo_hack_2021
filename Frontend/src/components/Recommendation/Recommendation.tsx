@@ -43,13 +43,20 @@ export default function Recommendation() {
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen} className={styles.mr15}>
-                Рекоммендации
+                Рекомендации
             </Button>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Рекоммендации</DialogTitle>
+                <DialogTitle>Рекомендации</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        You can set my maximum width and whether to adapt or not.
+                        Для помощи в принятии решения по построению новых спортивных объектов
+                        используются рекомендации, построенные алгоритмами машинного обучения.
+                        <br />
+                        Используется алгоритм k-means для кластеризации спортивных объектов и
+                        расчета информации по ним. Дополнительно для построения рекомендации
+                        используются матричные преобразования.
+                        <br />
+                        Оптимальное число классов определяется методом Elbow Rule.
                     </DialogContentText>
                     <Box
                         noValidate
@@ -62,7 +69,7 @@ export default function Recommendation() {
                         }}
                     >
                         <FormControl sx={{ mt: 2, minWidth: 120 }}>
-                            <InputLabel htmlFor="max-width">типы спортивных объектов</InputLabel>
+                            <InputLabel htmlFor="max-width">Выберите</InputLabel>
                             <Select
                                 autoFocus
                                 value={sportType}
