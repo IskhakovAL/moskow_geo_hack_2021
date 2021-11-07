@@ -42,7 +42,7 @@ const PointPolygon = () => {
                     </Typography>
                     <Typography>
                         <Typography component="p" className={styles.text}>
-                            Типы спортивных услуг:
+                            Виды спортивных услуг:
                         </Typography>{' '}
                         <Typography component="div" className={styles.typographyDiv}>
                             {pointInfo.typesOfSportsServices.map(renderList)}

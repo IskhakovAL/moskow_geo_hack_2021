@@ -5,6 +5,7 @@ import {
     IPositions,
     MarkerType,
     TCircle,
+    TLat,
     TPolygon,
 } from '../models/IPositions';
 import * as MapService from '../services/MapService';
@@ -176,10 +177,36 @@ const fetchPlots = () => async (dispatch) => {
     }
 };
 
+const fetchRecommendsMlSystemStart = createActionCreator('maps/fetchRecommendsMlSystemStart [..]');
+const fetchRecommendsMlSystemSuccess = createActionCreator(
+    'maps/fetchRecommendsMlSystemSuccess [success]',
+    (resolve) => (payload: { polygonList: TLat }) => resolve(payload),
+);
+const fetchRecommendsMlSystemError = createActionCreator(
+    'maps/fetchRecommendsMlSystemError [error]',
+    (resolve) => (err: Error) => resolve(err.message),
+);
+const switchRecommends = createActionCreator(
+    'maps/switchRecommends [success]',
+    (resolve) => (payload: boolean) => resolve(payload),
+);
+
+const fetchRecommendsMlSystem = () => async (dispatch) => {
+    dispatch(fetchRecommendsMlSystemStart());
+    try {
+        const response = await MapService.fetchRecommendsMlSystem();
+
+        dispatch(fetchRecommendsMlSystemSuccess(response));
+    } catch (err) {
+        dispatch(fetchRecommendsMlSystemError(err));
+    }
+};
+
 export const mapsSelectors = {
     hasMarkers: (state: IStore) => state.maps.hasMarkers,
     hasCircles: (state: IStore) => state.maps.hasCircles,
     hasPolygons: (state: IStore) => state.maps.hasPolygons,
+    hasRecommends: (state: IStore) => state.maps.hasRecommends,
     analytics: (state: IStore) => state.maps.analytics,
     filters: (state: IStore) => state.maps.filters,
     isFetching: (state: IStore) => state.maps.isFetching,
@@ -193,11 +220,13 @@ export const mapsSelectors = {
     pointCoord: (state: IStore) => state.maps.pointCoord,
     rectangleCoord: (state: IStore) => state.maps.rectangleCoord,
     emptyZones: (state: IStore) => state.maps.emptyZones,
+    recommendsPolygon: (state: IStore) => state.maps.recommendsPolygon,
 };
 export const mapsActions = {
     switchMarkers,
     switchCircles,
     switchPolygons,
+    switchRecommends,
     saveFilters,
     changeAnalytics,
     fetchMunicipalityInfo,
@@ -206,12 +235,14 @@ export const mapsActions = {
     fetchRectangleInfo,
     fetchEmptyZones,
     fetchPlots,
+    fetchRecommendsMlSystem,
 };
 
 const initialState = {
     hasMarkers: true,
     hasPolygons: false,
     hasCircles: false,
+    hasRecommends: false,
     isFetching: false,
     analytics: '',
     pointCoord: {} as Coordinate,
@@ -230,6 +261,7 @@ const initialState = {
         population: number;
         isFetching: boolean;
     },
+    recommendsPolygon: [],
 };
 
 export type IMapsState = typeof initialState;
@@ -355,6 +387,18 @@ export default createReducer(initialState, (handleAction) => [
         return {
             ...state,
             plots: payload.plots,
+        };
+    }),
+    handleAction(fetchRecommendsMlSystemSuccess, (state, { payload }) => {
+        return {
+            ...state,
+            recommendsPolygon: payload.polygonList,
+        };
+    }),
+    handleAction(switchRecommends, (state, { payload }) => {
+        return {
+            ...state,
+            hasRecommends: payload,
         };
     }),
 ]);

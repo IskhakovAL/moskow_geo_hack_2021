@@ -10,6 +10,7 @@ import { mapsActions, mapsSelectors } from '../../ducks/maps';
 import PointPolygon from './PointPolygon';
 import EmptyZones from './EmptyZones';
 import RectanglePolygon from '../RectanglePolygon/RectanglePolygon';
+import RecommendsPolygon from './RecommendsPolygon';
 
 function MapClickHandler() {
     const analytics = useSelector(mapsSelectors.analytics);
@@ -100,6 +101,7 @@ function MarkerMap() {
                 <PolygonMap />
                 <PointPolygon />
                 <RectanglePolygon />
+                <RecommendsPolygon />
                 <EmptyZones />
                 <MapClickHandler />
                 <AreaSelect />

@@ -1,7 +1,7 @@
 import Client from '../client/Client';
 import { RequestMethod, ResponseType } from '../client/BaseHttpClient';
 import { IFilterParams } from '../models/IFilterParams';
-import { IPolygonList, IPositions } from '../models/IPositions';
+import { IPolygonList, IPositions, TLat } from '../models/IPositions';
 import { IDict } from '../models/IDict';
 import { IPointInfo, PointParams } from '../models/IPointInfo';
 import { IPlots } from '../models/IPlots';
@@ -66,6 +66,10 @@ export const fetchRectangleFile = (data: RectangleParams) => {
 
 export const fetchPlots = () => {
     return Client.doRequest<IPlots>('plots');
+};
+
+export const fetchRecommendsMlSystem = () => {
+    return Client.doRequest<{ polygonList: TLat }>('recommendsMlSystem');
 };
 
 export const fetchDict = () => Client.doRequest<IDict>('catalog');
