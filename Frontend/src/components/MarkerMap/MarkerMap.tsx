@@ -51,7 +51,9 @@ function AreaSelect() {
 
             map.on('areaselected', (e) => {
                 // @ts-ignore
-                L.rectangle(e.bounds, { color: 'blue', weight: 1 }).addTo(map);
+                const newRectm = L.rectangle(e.bounds, { color: 'blue', weight: 1 });
+
+                newRectm.addTo(map);
 
                 dispatch(
                     mapsActions.fetchRectangleInfo({
@@ -63,6 +65,7 @@ function AreaSelect() {
                         ...filters,
                     }),
                 );
+                newRectm.removeFrom(map);
             });
 
             // You can restrict selection area like this:

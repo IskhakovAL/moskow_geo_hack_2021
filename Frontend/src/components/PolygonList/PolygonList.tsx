@@ -13,7 +13,7 @@ const PolygonList = ({ polygons }: IProps) => {
             {polygons.map((polygon, idx) => (
                 <Polygon
                     key={idx}
-                    pathOptions={{ fillOpacity: polygon.fillOpacity, color: '#EC0E43' }}
+                    pathOptions={{ fillOpacity: polygon.fillOpacity, color: '#f90052' }}
                     positions={polygon.polygon}
                 >
                     <Tooltip>
