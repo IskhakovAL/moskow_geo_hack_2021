@@ -2,7 +2,7 @@ FROM node:14
 
 WORKDIR /usr/src/msk_app/Frontend
 
-ADD package.json ./
+ADD ./Frontend/package.json ./
 RUN npm install
 
 COPY ./Frontend /usr/src/msk_app/Frontend

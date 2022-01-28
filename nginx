@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name 62.84.123.182;
+    server_name 23.105.226.217;
 
     client_max_body_size 50M;
     error_log /var/log/nginx/error.log;
