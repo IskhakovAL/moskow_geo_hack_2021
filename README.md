@@ -35,8 +35,7 @@
 
 # О нас
 
-* <dora.team@gmail.com> - По вопросам сотрудничества
-* [Dora.team](https://tlgg.ru/dorateam_ofc) 
+* <dora.team@gmail.com> - По вопросам сотрудничества 
 * [Искахов Аскар](https://tlgg.ru/atletiks) - Руководитель проекта
 * [Молокова Мария](https://tlgg.ru/nabor_bukovok) - Дизайнер, гео-аналитик
 * [Рыбкин Георгий](https://tlgg.ru/goshka_rybkin) - Бэкенд-разработчик
