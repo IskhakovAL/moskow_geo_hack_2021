@@ -29,7 +29,7 @@
 
 ### [Сопроводительная документация](https://drive.google.com/file/d/1Rfv-QREsotfq8QPldo_IXB72lMVHSXn3/view?usp=sharing)
 
-### [документация Rest API](https://documenter.getpostman.com/view/3750020/UV5ahGNC)
+### [Документация Rest API](https://documenter.getpostman.com/view/3750020/UV5ahGNC)
 
 ---
 
