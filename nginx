@@ -1,10 +1,24 @@
 server {
     listen 80;
     server_name 23.105.226.217;
+    return 404;
+}
+
+server {
+    listen 80;
+    server_name dora.team;
+    return 301 https://dora.team$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name dora.team;
 
     client_max_body_size 50M;
     error_log /var/log/nginx/error.log;
     access_log /var/log/nginx/access.log;
+    ssl_certificate /etc/ssl/bundle.crt;
+    ssl_certificate_key /etc/ssl/www.dora.team.key;
 
     location /api {
         include uwsgi_params;

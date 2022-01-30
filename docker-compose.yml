@@ -12,6 +12,8 @@ services:
     volumes:
       - ./nginx_logs:/var/log/nginx
       - ./nginx:/etc/nginx/conf.d/nginx.conf
+      - /etc/ssl/private/bundle.crt:/etc/ssl/bundle.crt
+      - /etc/ssl/private/server.key:/etc/ssl/www.dora.team.key
     depends_on:
       - msk_app
 
