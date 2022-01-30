@@ -23,6 +23,8 @@ services:
       dockerfile: Dockerfile
     container_name: msk_app
     restart: unless-stopped
+    env_file:
+      - .env
     expose:
       - 8080
     depends_on:

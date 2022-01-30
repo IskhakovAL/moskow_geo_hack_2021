@@ -1,8 +1,9 @@
 import os
 from sqlalchemy import create_engine
-from dotenv import load_dotenv
 
-load_dotenv()
+# Для отладки
+# from dotenv import load_dotenv
+# load_dotenv()
 
 # Конфиг с информацией об IP адресе сервера, на котором работает проект с созданием подключения к PSQL базе данных
 POSTGRES_HOST = '23.105.226.217'
