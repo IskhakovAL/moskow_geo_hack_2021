@@ -1,11 +1,19 @@
 import os
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Конфиг с информацией об IP адресе сервера, на котором работает проект с созданием подключения к PSQL базе данных
-SERVER_ADDRESS = '23.105.226.217'
+POSTGRES_HOST = '23.105.226.217'
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
 
-if os.name == 'posix':
-    SQL_ENGINE = create_engine("postgresql://dbuser:qwerty12345@db:5432/db", pool_recycle=3600)
-else:
-    SQL_ENGINE = create_engine("postgresql://dbuser:qwerty12345@{}:5432/db".format(SERVER_ADDRESS)
-                               , pool_recycle=3600)
+SQL_ENGINE = create_engine("postgresql://{user}:{password}@{host}:5432/{db}".format(
+    user=POSTGRES_USER,
+    password=POSTGRES_PASSWORD,
+    host=POSTGRES_HOST,
+    db=POSTGRES_DB
+),
+    pool_recycle=3600)
