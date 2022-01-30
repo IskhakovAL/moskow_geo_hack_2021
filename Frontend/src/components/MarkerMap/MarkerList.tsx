@@ -19,7 +19,7 @@ const MarkerList = () => {
             {markers.map((marker, idx) => {
                 return (
                     <Marker position={[marker.position[0], marker.position[1]]} key={idx}>
-                        <Popup>
+                        <Popup maxHeight={500}>
                             <Typography>
                                 <Typography component="span" className={styles.text}>
                                     Доступность:{' '}

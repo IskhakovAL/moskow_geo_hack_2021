@@ -3,6 +3,7 @@ import cn from 'classnames';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import ReactDOM from 'react-dom';
+import CloseIcon from '@mui/icons-material/Close';
 import styles from './reportModal.m.scss';
 import useReactPortal from '../../hooks/useReactPortal';
 
@@ -45,7 +46,9 @@ const ReportModal = ({
                         [styles.closeIcon]: !classes.closeIcon,
                     })}
                     onClick={onClose}
-                />
+                >
+                    <CloseIcon />
+                </div>
             </div>
             <div className={cn(classes.content, { [styles.content]: !classes.content })}>
                 {isFetching ? (

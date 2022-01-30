@@ -99,7 +99,7 @@ const jsLoaders = (...presets) => {
     return loaders;
 };
 
-const PROXY_HOST = process.env.PROXY_HOST || 'http://62.84.123.182';
+const PROXY_HOST = process.env.PROXY_HOST || 'https://dora.team';
 const origin = PROXY_HOST.replace(/http(s)?:\/\/?/, '');
 
 const proxyConfig = {

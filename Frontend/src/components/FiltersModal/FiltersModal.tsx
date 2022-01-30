@@ -13,6 +13,7 @@ import { IDict } from '../../models/IDict';
 import useFiltersModal from './useFiltersModal';
 import { mapsActions } from '../../ducks/maps';
 import FormUtils from '../../utils/FormUtils';
+import useModal from '../../hooks/useModal';
 
 const filters = [
     { component: 'SportsFacility', name: 'Наименование спортивного объекта' },
@@ -26,9 +27,6 @@ const filters = [
 const FiltersModal = () => {
     const {
         form,
-        isOpenFilters,
-        onClose,
-        onOpen,
         hasMarkers,
         hasPolygons,
         hasCircles,
@@ -37,6 +35,8 @@ const FiltersModal = () => {
         onSwitchCircles,
         onSubmit,
     } = useFiltersModal();
+
+    const { isOpen: isOpenFilters, onClose, onOpen } = useModal();
 
     const [acitveFilter, setActiveFilter] = useState('');
     const [dict, setDict] = useState({} as IDict);

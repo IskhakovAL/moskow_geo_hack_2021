@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createForm } from 'final-form';
 import { mapsActions, mapsSelectors } from '../../ducks/maps';
@@ -10,15 +10,6 @@ export default function useFiltersModal() {
     const hasMarkers = useSelector(mapsSelectors.hasMarkers);
     const hasCircles = useSelector(mapsSelectors.hasCircles);
     const hasPolygons = useSelector(mapsSelectors.hasPolygons);
-    const [isOpenFilters, setIsOpenFilters] = useState(true);
-
-    const onOpen = useCallback(() => {
-        setIsOpenFilters(true);
-    }, []);
-
-    const onClose = useCallback(() => {
-        setIsOpenFilters(false);
-    }, []);
 
     const onSwitchMarkers = useCallback((e) => {
         dispatch(mapsActions.switchMarkers(e.target.checked));
@@ -46,9 +37,6 @@ export default function useFiltersModal() {
         hasMarkers,
         hasCircles,
         hasPolygons,
-        isOpenFilters,
-        onOpen,
-        onClose,
         onSwitchMarkers,
         onSwitchCircles,
         onSwitchPolygon,

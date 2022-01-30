@@ -1,15 +1,20 @@
 import { Polygon } from 'react-leaflet';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
-import { mapsSelectors } from '../../ducks/maps';
+import { mapsActions, mapsSelectors } from '../../ducks/maps';
 import ReportModal from '../ReportModal/ReportModal';
 import styles from './pointPolygon.m.scss';
 
 const PointPolygon = () => {
+    const dispatch = useDispatch();
     const pointInfo = useSelector(mapsSelectors.pointInfo);
     const analytics = useSelector(mapsSelectors.analytics);
     const isFetching = useSelector(mapsSelectors.isFetchingPointInfo);
+
+    const onCloseReport = useCallback(() => {
+        dispatch(mapsActions.resetPointInfo());
+    }, []);
 
     if (!Object.keys(pointInfo).length || analytics !== 'dot') {
         return null;
@@ -24,7 +29,7 @@ const PointPolygon = () => {
     return (
         <>
             <Polygon pathOptions={{ color: 'blue' }} positions={pointInfo.polygonList as any} />
-            <ReportModal isFetching={isFetching}>
+            <ReportModal isFetching={isFetching} onClose={onCloseReport}>
                 <>
                     <Typography className={styles.mb5}>
                         <Typography component="span" className={styles.text}>
