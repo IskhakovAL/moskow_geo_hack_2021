@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import cn from 'classnames';
 import {
     Button,
     FormControl,
@@ -103,63 +104,67 @@ const AnalyticsModal = () => {
     }, [analytics, rectangleCoord, pointCoord]);
 
     return (
-        <div className={styles.modal}>
-            <FormControl component="fieldset">
+        <div className={cn(styles.modal, { [styles.modalSwitchOff]: !analytics })}>
+            <FormControl component="fieldset" className={styles.formControl}>
                 <FormControlLabel
                     control={<Switch checked={Boolean(analytics)} onChange={handleSwitch} />}
                     labelPlacement="start"
                     label="Аналитика"
                     className={styles.switch}
                 />
-                <RadioGroup
-                    aria-label="Аналитика"
-                    name="radio-buttons-group"
-                    onChange={handleChangeAnalytics}
-                >
-                    <FormControlLabel
-                        className={styles.formControlLabel}
-                        value="dot"
-                        control={<Radio checked={isDotAnalytics} />}
-                        label={
-                            <Typography className={styles.label}>
-                                Аналитика по точке{' '}
-                                <Tooltip title="Активировав эту функцию вы можете выбрать интересующую Вас точку на карте (нажав на неё левой кнопкой мыши) и получить следующую информацию по ней: суммарную площадь объектов, типы спортивных зон, виды спортивных услуг.">
-                                    <IconButton>
-                                        <HelpOutlineIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Typography>
-                        }
-                    />
-                    <FormControlLabel
-                        className={styles.formControlLabel}
-                        value="area"
-                        control={<Radio checked={isAreaAnalytics} />}
-                        label={
-                            <Typography className={styles.label}>
-                                Аналитика по области{' '}
-                                <Tooltip title="Активировав эту функцию вы можете выбрать интересующую Вас область на карте (зажав ctrl + выделив область левой кнопкой мыши) и получить следующую информацию по ней: перечень спортивных зон, суммарную площадь спортивных зон, виды спортивных услуг.">
-                                    <IconButton>
-                                        <HelpOutlineIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Typography>
-                        }
-                    />
-                    <FormControlLabel
-                        value="empty"
-                        control={<Radio checked={isEmptyAnalytics} />}
-                        label="Пустые зоны"
-                    />
-                </RadioGroup>
-                <Button
-                    variant="contained"
-                    className={styles.button}
-                    disabled={disabled}
-                    onClick={downloadZip}
-                >
-                    Сохранить Слои
-                </Button>
+                {Boolean(analytics) && (
+                    <>
+                        <RadioGroup
+                            aria-label="Аналитика"
+                            name="radio-buttons-group"
+                            onChange={handleChangeAnalytics}
+                        >
+                            <FormControlLabel
+                                className={styles.formControlLabel}
+                                value="dot"
+                                control={<Radio checked={isDotAnalytics} />}
+                                label={
+                                    <Typography className={styles.label}>
+                                        Аналитика по точке{' '}
+                                        <Tooltip title="Активировав эту функцию вы можете выбрать интересующую Вас точку на карте (нажав на неё левой кнопкой мыши) и получить следующую информацию по ней: суммарную площадь объектов, типы спортивных зон, виды спортивных услуг.">
+                                            <IconButton>
+                                                <HelpOutlineIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Typography>
+                                }
+                            />
+                            <FormControlLabel
+                                className={styles.formControlLabel}
+                                value="area"
+                                control={<Radio checked={isAreaAnalytics} />}
+                                label={
+                                    <Typography className={styles.label}>
+                                        Аналитика по области{' '}
+                                        <Tooltip title="Активировав эту функцию вы можете выбрать интересующую Вас область на карте (зажав ctrl + выделив область левой кнопкой мыши) и получить следующую информацию по ней: перечень спортивных зон, суммарную площадь спортивных зон, виды спортивных услуг.">
+                                            <IconButton>
+                                                <HelpOutlineIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Typography>
+                                }
+                            />
+                            <FormControlLabel
+                                value="empty"
+                                control={<Radio checked={isEmptyAnalytics} />}
+                                label="Пустые зоны"
+                            />
+                        </RadioGroup>
+                        <Button
+                            variant="contained"
+                            className={styles.button}
+                            disabled={disabled}
+                            onClick={downloadZip}
+                        >
+                            Сохранить Слои
+                        </Button>
+                    </>
+                )}
             </FormControl>
         </div>
     );

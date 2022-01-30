@@ -1,14 +1,19 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Polygon } from 'react-leaflet';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Typography } from '@mui/material';
-import { mapsSelectors } from '../../ducks/maps';
+import { mapsActions, mapsSelectors } from '../../ducks/maps';
 import ReportModal from '../ReportModal/ReportModal';
 import styles from './rectanglePolygon.m.scss';
 
 const RectanglePolygon = () => {
+    const dispatch = useDispatch();
     const rectangleInfo = useSelector(mapsSelectors.rectangleInfo);
     const analytics = useSelector(mapsSelectors.analytics);
+
+    const onCloseReport = useCallback(() => {
+        dispatch(mapsActions.resetRectangle());
+    }, []);
 
     if (!Object.keys(rectangleInfo).length || analytics !== 'area') {
         return null;
@@ -23,7 +28,7 @@ const RectanglePolygon = () => {
     return (
         <>
             <Polygon pathOptions={{ color: 'blue' }} positions={rectangleInfo.polygonList as any} />
-            <ReportModal>
+            <ReportModal onClose={onCloseReport}>
                 <>
                     <Typography className={styles.mb5}>
                         <Typography component="span" className={styles.text}>

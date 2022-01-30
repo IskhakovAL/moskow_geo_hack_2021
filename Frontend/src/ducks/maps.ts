@@ -93,6 +93,8 @@ const fetchPointInfoSuccess = createActionCreator(
     (resolve) => (payload: IPointInfo) => resolve(payload),
 );
 
+const resetPointInfo = createActionCreator('maps/resetPointInfo');
+
 const fetchPointInfoError = createActionCreator(
     'maps/fetchPointInfoError [error]',
     (resolve) => (err: Error) => resolve(err.message),
@@ -124,6 +126,8 @@ const fetchRectangleError = createActionCreator(
     (resolve) => (err: Error) => resolve(err.message),
 );
 
+const resetRectangle = createActionCreator('maps/resetRectangle');
+
 const fetchRectangleInfo = (data) => async (dispatch) => {
     dispatch(fetchRectangleStart(data.rectangleCoord));
     try {
@@ -144,6 +148,7 @@ const fetchEmptyZonesError = createActionCreator(
     'maps/fetchEmptyZonesError [error]',
     (resolve) => (err: Error) => resolve(err.message),
 );
+const resetEmptyZones = createActionCreator('maps/resetEmptyZones');
 
 const fetchEmptyZones = (params: IFilterParams) => async (dispatch) => {
     dispatch(fetchEmptyZonesStart());
@@ -232,8 +237,11 @@ export const mapsActions = {
     fetchMunicipalityInfo,
     fetchPosition,
     fetchPointInfo,
+    resetPointInfo,
     fetchRectangleInfo,
+    resetRectangle,
     fetchEmptyZones,
+    resetEmptyZones,
     fetchPlots,
     fetchRecommendsMlSystem,
 };
@@ -323,6 +331,12 @@ export default createReducer(initialState, (handleAction) => [
             isFetchingPointInfo: false,
         };
     }),
+    handleAction(resetPointInfo, (state) => {
+        return {
+            ...state,
+            pointInfo: {} as IPointInfo,
+        };
+    }),
     handleAction(fetchPositionsSuccess, (state, { payload }) => {
         return {
             ...state,
@@ -355,6 +369,12 @@ export default createReducer(initialState, (handleAction) => [
             rectangleInfo: payload,
         };
     }),
+    handleAction(resetRectangle, (state) => {
+        return {
+            ...state,
+            rectangleInfo: {} as IRectangleInfo,
+        };
+    }),
     handleAction(fetchEmptyZonesStart, (state) => {
         return {
             ...state,
@@ -370,6 +390,17 @@ export default createReducer(initialState, (handleAction) => [
             emptyZones: {
                 ...payload,
                 polygon: payload.polygonList[0],
+                isFetching: false,
+            },
+        };
+    }),
+    handleAction(resetEmptyZones, (state) => {
+        return {
+            ...state,
+            emptyZones: {
+                polygon: {} as TPolygon,
+                area: null,
+                population: null,
                 isFetching: false,
             },
         };

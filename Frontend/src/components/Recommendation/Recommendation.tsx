@@ -80,7 +80,7 @@ export default function Recommendation() {
                                     id: 'max-width',
                                 }}
                             >
-                                <MenuItem value="swimmingPool">бассейн</MenuItem>
+                                <MenuItem value="swimmingPool">Бассейн</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControlLabel
