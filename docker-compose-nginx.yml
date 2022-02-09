@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+
+  nginx:
+    image: nginx:1.19.0-alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx_logs:/var/log/nginx
+      - ./nginx:/etc/nginx/conf.d/nginx.conf
+      - /etc/ssl/private/bundle.crt:/etc/ssl/bundle.crt
+      - /etc/ssl/private/server.key:/etc/ssl/www.dora.team.key
+    networks:
+      - proxy
+      - project_project1
+
+# Подразумевается раздельное использование контейнера с reverse proxy и с проектом
+networks:
+  proxy:
+  project_project1:
+    external: true

@@ -2,21 +2,6 @@ version: "3.8"
 
 services:
 
-  nginx:
-    image: nginx:1.19.0-alpine
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx_logs:/var/log/nginx
-      - ./nginx:/etc/nginx/conf.d/nginx.conf
-      - /etc/ssl/private/bundle.crt:/etc/ssl/bundle.crt
-      - /etc/ssl/private/server.key:/etc/ssl/www.dora.team.key
-    depends_on:
-      - msk_app
-
   msk_app:
     build:
       context: .
@@ -30,6 +15,8 @@ services:
     depends_on:
       - front
       - db
+    networks:
+      - project1
 
   front:
     build:
@@ -39,6 +26,8 @@ services:
     restart: unless-stopped
     expose:
       - 8082
+    networks:
+      - project1
 
   db:
     image: postgis/postgis
@@ -50,4 +39,9 @@ services:
       - .env
     ports:
       - "5432:5432"
+    networks:
+      - project1
 
+# Подразумевается раздельное использование контейнера с reverse proxy и с проектом
+networks:
+  project1:
