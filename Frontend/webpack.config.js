@@ -193,21 +193,15 @@ module.exports = {
     optimization: optimization(),
     devServer: {
         port: 8082,
-        host: '0.0.0.0',
-        clientLogLevel: 'warning',
-        stats: 'errors-only',
-        useLocalIp: true,
-        hot: isDevelopment,
-        inline: true,
-        compress: true,
-        overlay: true,
-        open: true,
-        disableHostCheck: true,
+        host: "0.0.0.0",
         historyApiFallback: true,
+        client: {
+            logging: "verbose",
+        },
         proxy: {
             '/api': proxyConfig,
         },
     },
-    devtool: isDevelopment ? 'source-map' : '',
+    devtool: isProduction ? "hidden-source-map" : "source-map",
     plugins: getPlugins(),
 };
